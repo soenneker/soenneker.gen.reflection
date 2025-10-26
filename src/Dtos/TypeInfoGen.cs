@@ -1,5 +1,6 @@
 using System;
-using System.Linq;
+using System.Runtime.CompilerServices;
+using Soenneker.Gen.Reflection.Registries;
 
 namespace Soenneker.Gen.Reflection.Dtos;
 
@@ -8,6 +9,7 @@ namespace Soenneker.Gen.Reflection.Dtos;
 /// </summary>
 public readonly struct TypeInfoGen
 {
+    private readonly ulong _id;
     private readonly string _name;
     private readonly string _fullName;
     private readonly string _assemblyQualifiedName;
@@ -15,14 +17,15 @@ public readonly struct TypeInfoGen
     private readonly bool _isReferenceType;
     private readonly bool _isGenericType;
     private readonly bool _isNullable;
-    private readonly FieldInfoGen[] _fields;
-    private readonly PropertyInfoGen[] _properties;
-    private readonly MethodInfoGen[] _methods;
-    private readonly string? _underlyingTypeName;
-    private readonly string[]? _genericTypeArgumentNames;
+    private readonly ulong[] _fieldIds;
+    private readonly ulong[] _propertyIds;
+    private readonly ulong[] _methodIds;
+    private readonly ulong? _underlyingTypeId;
+    private readonly ulong[]? _genericTypeArgumentIds;
 
-    public TypeInfoGen(string name, string fullName, string assemblyQualifiedName, bool isValueType, bool isReferenceType, bool isGenericType, bool isNullable, FieldInfoGen[] fields, PropertyInfoGen[] properties, MethodInfoGen[] methods, string? underlyingTypeName, string[]? genericTypeArgumentNames)
+    public TypeInfoGen(ulong id, string name, string fullName, string assemblyQualifiedName, bool isValueType, bool isReferenceType, bool isGenericType, bool isNullable, ulong[] fieldIds, ulong[] propertyIds, ulong[] methodIds, ulong? underlyingTypeId, ulong[]? genericTypeArgumentIds)
     {
+        _id = id;
         _name = name;
         _fullName = fullName;
         _assemblyQualifiedName = assemblyQualifiedName;
@@ -30,13 +33,14 @@ public readonly struct TypeInfoGen
         _isReferenceType = isReferenceType;
         _isGenericType = isGenericType;
         _isNullable = isNullable;
-        _fields = fields;
-        _properties = properties;
-        _methods = methods;
-        _underlyingTypeName = underlyingTypeName;
-        _genericTypeArgumentNames = genericTypeArgumentNames;
+        _fieldIds = fieldIds;
+        _propertyIds = propertyIds;
+        _methodIds = methodIds;
+        _underlyingTypeId = underlyingTypeId;
+        _genericTypeArgumentIds = genericTypeArgumentIds;
     }
 
+    public ulong Id => _id;
     public string Name => _name;
     public string FullName => _fullName;
     public string AssemblyQualifiedName => _assemblyQualifiedName;
@@ -47,41 +51,64 @@ public readonly struct TypeInfoGen
 
     public TypeInfoGen? UnderlyingType
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            if (_underlyingTypeName == null)
+            if (_underlyingTypeId == null)
                 return null;
-            string? n = _underlyingTypeName;
-            return new TypeInfoGen(n, n, n, true, false, false, false, Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), null, null);
+            return TypeRegistry.GetType(_underlyingTypeId.Value);
         }
     }
 
     public TypeInfoGen[] GenericTypeArguments
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            if (_genericTypeArgumentNames == null || _genericTypeArgumentNames.Length == 0)
+            if (_genericTypeArgumentIds == null || _genericTypeArgumentIds.Length == 0)
                 return Array.Empty<TypeInfoGen>();
-            return Array.ConvertAll(_genericTypeArgumentNames, n => new TypeInfoGen(n, n, n, true, false, false, false, Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), null, null));
+
+            var result = new TypeInfoGen[_genericTypeArgumentIds.Length];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = TypeRegistry.GetType(_genericTypeArgumentIds[i]);
+            return result;
         }
     }
 
-    public PropertyInfoGen[] Properties => _properties ?? Array.Empty<PropertyInfoGen>();
-    public FieldInfoGen[] Fields => _fields ?? Array.Empty<FieldInfoGen>();
-    public MethodInfoGen[] Methods => _methods ?? Array.Empty<MethodInfoGen>();
+    public PropertyInfoGen[] Properties
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => PropertyRegistry.GetPropertiesForType(_id).ToArray();
+    }
 
+    public FieldInfoGen[] Fields
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => FieldRegistry.GetFieldsForType(_id).ToArray();
+    }
+
+    public MethodInfoGen[] Methods
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => MethodRegistry.GetMethodsForType(_id).ToArray();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public PropertyInfoGen? GetProperty(string name)
     {
-        return Properties.FirstOrDefault(p => p.Name == name);
+        return PropertyRegistry.GetPropertyByName(_id, name);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public FieldInfoGen? GetField(string name)
     {
-        return Fields.FirstOrDefault(f => f.Name == name);
+        return FieldRegistry.GetFieldByName(_id, name);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public MethodInfoGen? GetMethod(string name)
     {
-        return Methods.FirstOrDefault(m => m.Name == name);
+        return MethodRegistry.GetMethodByName(_id, name);
     }
 }
+

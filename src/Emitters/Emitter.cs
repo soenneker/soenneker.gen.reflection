@@ -154,4 +154,31 @@ internal static class Emitter
         }
         return "null";
     }
+
+    /// <summary>
+    /// Gets the underlying type ID for nullable types (optimized version)
+    /// </summary>
+    public static string GetUnderlyingTypeId(ITypeSymbol typeSymbol)
+    {
+        if (IsNullableType(typeSymbol) && typeSymbol is INamedTypeSymbol namedType)
+        {
+            ITypeSymbol underlyingType = namedType.TypeArguments[0];
+            return $"{(ulong)underlyingType.GetHashCode()}UL";
+        }
+        return "null";
+    }
+
+    /// <summary>
+    /// Gets generic type argument IDs (optimized version)
+    /// </summary>
+    public static string GetGenericTypeArgumentIds(ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType)
+        {
+            ITypeSymbol[] typeArguments = namedType.TypeArguments.ToArray();
+            string[] ids = Array.ConvertAll(typeArguments, arg => $"{(ulong)arg.GetHashCode()}UL");
+            return $"new ulong[] {{ {string.Join(", ", ids)} }}";
+        }
+        return "null";
+    }
 }

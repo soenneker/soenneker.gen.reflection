@@ -20,6 +20,7 @@ internal static class TypeDefinitionsEmitter
         sb.AppendLine("using System;");
         sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine("using System.Linq;");
+        sb.AppendLine("using System.Runtime.CompilerServices;");
         sb.AppendLine();
         sb.AppendLine("namespace Soenneker.Gen.Reflection");
         sb.AppendLine("{");
@@ -31,7 +32,12 @@ internal static class TypeDefinitionsEmitter
         EmitMethodInfoGen(sb);
         
         sb.AppendLine("}");
-        
+        sb.AppendLine();
+        sb.AppendLine("namespace Soenneker.Gen.Reflection.Registries");
+        sb.AppendLine("{");
+        EmitRegistries(sb);
+        sb.AppendLine("}");
+
         Emitter.AddSource(context, "TypeDefinitions.g.cs", sb);
     }
 
@@ -221,5 +227,59 @@ internal static class TypeDefinitionsEmitter
         sb.AppendLine("        public TypeInfoGen[] ParameterTypes => _parameterTypes == null || _parameterTypes.Length == 0 ? Array.Empty<TypeInfoGen>() : Array.ConvertAll(_parameterTypes, n => new TypeInfoGen(n, n, n, false, true, false, false, Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), null, null));");
         sb.AppendLine("    }");
         sb.AppendLine();
+    }
+
+    private static void EmitRegistries(StringBuilder sb)
+    {
+        sb.AppendLine("    /// <summary>");
+        sb.AppendLine("    /// Global registry for precomputed TypeInfoGen instances");
+        sb.AppendLine("    /// </summary>");
+        sb.AppendLine("    public static class TypeRegistry");
+        sb.AppendLine("    {");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<ulong, Soenneker.Gen.Reflection.TypeInfoGen> _types = new();");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<string, ulong> _nameToId = new();");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static void Register(ulong id, Soenneker.Gen.Reflection.TypeInfoGen typeInfo, string name) { _types[id] = typeInfo; _nameToId[name] = id; }");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.TypeInfoGen GetType(ulong id) => _types.TryGetValue(id, out var v) ? v : default;");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.TypeInfoGen? GetTypeByName(string name) => _nameToId.TryGetValue(name, out var id) ? GetType(id) : (Soenneker.Gen.Reflection.TypeInfoGen?)null;");
+        sb.AppendLine("    }");
+        sb.AppendLine();
+        sb.AppendLine("    /// <summary>");
+        sb.AppendLine("    /// Global registry for precomputed FieldInfoGen instances");
+        sb.AppendLine("    /// </summary>");
+        sb.AppendLine("    public static class FieldRegistry");
+        sb.AppendLine("    {");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<ulong, Soenneker.Gen.Reflection.FieldInfoGen> _fields = new();");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<ulong, System.Collections.Generic.Dictionary<string, ulong>> _typeToFieldIds = new();");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static void Register(ulong id, Soenneker.Gen.Reflection.FieldInfoGen info, ulong typeId) { _fields[id] = info; if (!_typeToFieldIds.TryGetValue(typeId, out var map)) { map = new System.Collections.Generic.Dictionary<string, ulong>(); _typeToFieldIds[typeId] = map; } map[info.Name] = id; }");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.FieldInfoGen GetField(ulong id) => _fields.TryGetValue(id, out var v) ? v : default;");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.FieldInfoGen? GetFieldByName(ulong typeId, string name) => _typeToFieldIds.TryGetValue(typeId, out var map) && map.TryGetValue(name, out var id) ? GetField(id) : (Soenneker.Gen.Reflection.FieldInfoGen?)null;");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static ReadOnlySpan<Soenneker.Gen.Reflection.FieldInfoGen> GetFieldsForType(ulong typeId) { if (!_typeToFieldIds.TryGetValue(typeId, out var map)) return ReadOnlySpan<Soenneker.Gen.Reflection.FieldInfoGen>.Empty; var arr = new Soenneker.Gen.Reflection.FieldInfoGen[map.Count]; int i = 0; foreach (var id in map.Values) arr[i++] = GetField(id); return arr; }");
+        sb.AppendLine("    }");
+        sb.AppendLine();
+        sb.AppendLine("    /// <summary>");
+        sb.AppendLine("    /// Global registry for precomputed PropertyInfoGen instances");
+        sb.AppendLine("    /// </summary>");
+        sb.AppendLine("    public static class PropertyRegistry");
+        sb.AppendLine("    {");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<ulong, Soenneker.Gen.Reflection.PropertyInfoGen> _properties = new();");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<ulong, System.Collections.Generic.Dictionary<string, ulong>> _typeToPropertyIds = new();");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static void Register(ulong id, Soenneker.Gen.Reflection.PropertyInfoGen info, ulong typeId) { _properties[id] = info; if (!_typeToPropertyIds.TryGetValue(typeId, out var map)) { map = new System.Collections.Generic.Dictionary<string, ulong>(); _typeToPropertyIds[typeId] = map; } map[info.Name] = id; }");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.PropertyInfoGen GetProperty(ulong id) => _properties.TryGetValue(id, out var v) ? v : default;");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.PropertyInfoGen? GetPropertyByName(ulong typeId, string name) => _typeToPropertyIds.TryGetValue(typeId, out var map) && map.TryGetValue(name, out var id) ? GetProperty(id) : (Soenneker.Gen.Reflection.PropertyInfoGen?)null;");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static ReadOnlySpan<Soenneker.Gen.Reflection.PropertyInfoGen> GetPropertiesForType(ulong typeId) { if (!_typeToPropertyIds.TryGetValue(typeId, out var map)) return ReadOnlySpan<Soenneker.Gen.Reflection.PropertyInfoGen>.Empty; var arr = new Soenneker.Gen.Reflection.PropertyInfoGen[map.Count]; int i = 0; foreach (var id in map.Values) arr[i++] = GetProperty(id); return arr; }");
+        sb.AppendLine("    }");
+        sb.AppendLine();
+        sb.AppendLine("    /// <summary>");
+        sb.AppendLine("    /// Global registry for precomputed MethodInfoGen instances");
+        sb.AppendLine("    /// </summary>");
+        sb.AppendLine("    public static class MethodRegistry");
+        sb.AppendLine("    {");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<ulong, Soenneker.Gen.Reflection.MethodInfoGen> _methods = new();");
+        sb.AppendLine("        private static readonly System.Collections.Generic.Dictionary<ulong, System.Collections.Generic.Dictionary<string, ulong>> _typeToMethodIds = new();");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static void Register(ulong id, Soenneker.Gen.Reflection.MethodInfoGen info, ulong typeId) { _methods[id] = info; if (!_typeToMethodIds.TryGetValue(typeId, out var map)) { map = new System.Collections.Generic.Dictionary<string, ulong>(); _typeToMethodIds[typeId] = map; } map[info.Name] = id; }");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.MethodInfoGen GetMethod(ulong id) => _methods.TryGetValue(id, out var v) ? v : default;");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static Soenneker.Gen.Reflection.MethodInfoGen? GetMethodByName(ulong typeId, string name) => _typeToMethodIds.TryGetValue(typeId, out var map) && map.TryGetValue(name, out var id) ? GetMethod(id) : (Soenneker.Gen.Reflection.MethodInfoGen?)null;");
+        sb.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)] public static ReadOnlySpan<Soenneker.Gen.Reflection.MethodInfoGen> GetMethodsForType(ulong typeId) { if (!_typeToMethodIds.TryGetValue(typeId, out var map)) return ReadOnlySpan<Soenneker.Gen.Reflection.MethodInfoGen>.Empty; var arr = new Soenneker.Gen.Reflection.MethodInfoGen[map.Count]; int i = 0; foreach (var id in map.Values) arr[i++] = GetMethod(id); return arr; }");
+        sb.AppendLine("    }");
     }
 }

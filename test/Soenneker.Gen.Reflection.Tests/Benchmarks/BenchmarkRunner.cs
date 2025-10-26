@@ -13,7 +13,7 @@ public class BenchmarkRunner : BenchmarkTest
     {
     }
 
-    //[LocalFact]
+  //  [LocalFact]
     public async ValueTask TypeInfoAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<TypeInfoAccessBenchmark>(DefaultConf);
@@ -21,7 +21,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-   // [LocalFact]
+  //  [LocalFact]
     public async ValueTask PropertyAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<PropertyAccessBenchmark>(DefaultConf);
@@ -29,7 +29,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-   // [LocalFact]
+  //  [LocalFact]
     public async ValueTask FieldAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<FieldAccessBenchmark>(DefaultConf);
@@ -37,7 +37,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-   // [LocalFact]
+ //   [LocalFact]
     public async ValueTask MethodAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<MethodAccessBenchmark>(DefaultConf);
@@ -45,7 +45,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-  //  [LocalFact]
+ //   [LocalFact]
     public async ValueTask ComplexTypeBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<ComplexTypeBenchmark>(DefaultConf);
@@ -53,7 +53,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-   [LocalFact]
+  // [LocalFact]
     public async ValueTask SimpleBenchmarkTest()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<SimpleBenchmarkTest>(DefaultConf);

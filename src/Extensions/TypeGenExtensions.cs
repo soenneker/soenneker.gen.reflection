@@ -53,6 +53,7 @@ public static partial class TypeGenExtensions
         string[]? genericArgs = type.IsGenericType ? Array.ConvertAll(type.GetGenericArguments(), t => t.Name) : null;
 
         return new TypeInfoGen(
+            0UL,
             name,
             type.FullName ?? type.Name,
             type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
@@ -60,11 +61,11 @@ public static partial class TypeGenExtensions
             !type.IsValueType,
             type.IsGenericType,
             isNullable,
-            Array.Empty<FieldInfoGen>(),
-            Array.Empty<PropertyInfoGen>(),
-            Array.Empty<MethodInfoGen>(),
-            underlying,
-            genericArgs);
+            Array.Empty<ulong>(),
+            Array.Empty<ulong>(),
+            Array.Empty<ulong>(),
+            null,
+            null);
     }
 }
 
