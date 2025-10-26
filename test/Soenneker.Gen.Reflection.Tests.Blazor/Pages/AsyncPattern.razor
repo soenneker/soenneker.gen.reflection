@@ -1,0 +1,40 @@
+@page "/async-pattern"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Async Pattern Test</PageTitle>
+
+<h1>Async Pattern Test</h1>
+
+<button class="btn btn-primary" @onclick="TestAsyncPattern">Test Async Pattern</button>
+
+@code {
+    private ExternalSourceDto _asyncSource = new ExternalSourceDto { Id = "async-test" };
+
+    private async Task TestAsyncPattern()
+    {
+        // Pattern: Adapt calls in async methods
+        var adaptedResult = _asyncSource.Adapt<ExternalDestDto>();
+        
+        // Pattern: Adapt calls with async/await
+        ExternalDestDto asyncAdapted = await ProcessAsyncAdapt(_asyncSource);
+        
+        // Pattern: Adapt calls in Task.Run
+        ExternalDestDto taskAdapted = await Task.Run(() => _asyncSource.Adapt<ExternalDestDto>());
+        
+        // Pattern: Adapt calls with ConfigureAwait
+        ExternalDestDto configuredAdapted = await ProcessConfiguredAdapt(_asyncSource).ConfigureAwait(false);
+    }
+    
+    private async Task<ExternalDestDto> ProcessAsyncAdapt(ExternalSourceDto source)
+    {
+        await Task.Delay(1); // Simulate async work
+        return source.Adapt<ExternalDestDto>();
+    }
+    
+    private async Task<ExternalDestDto> ProcessConfiguredAdapt(ExternalSourceDto source)
+    {
+        await Task.Delay(1);
+        return source.Adapt<ExternalDestDto>();
+    }
+}
+

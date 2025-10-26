@@ -1,0 +1,23 @@
+@page "/method-return-pattern"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Method Return Pattern Test</PageTitle>
+
+<h1>Method Return Pattern Test</h1>
+
+<button class="btn btn-primary" @onclick="OnTestClick">Test Method Return Pattern</button>
+
+@code {
+    private void OnTestClick()
+    {
+        ExternalSourceDto result = TestMethodReturnPattern();
+    }
+
+    private ExternalSourceDto TestMethodReturnPattern()
+    {
+        var source = new ExternalProjectDto { Id = "method-return-test" };
+        
+        // Pattern: return source.Adapt<Type>()
+        return source.Adapt<ExternalSourceDto>();
+    }
+}

@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="appsettings.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="15.1.0" />
+        <PackageReference Include="AwesomeAssertions" Version="9.2.1" />
+        <PackageReference Include="Facet.Extensions" Version="3.1.14" />
+        <PackageReference Include="Mapster" Version="9.0.0-pre01" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Riok.Mapperly" Version="4.3.0" />
+        <PackageReference Include="Soenneker.Facts.Local" Version="3.0.521" />
+        <PackageReference Include="Soenneker.Tests.Benchmark" Version="3.0.47" />
+        <PackageReference Include="Soenneker.Documents.Audit" Version="3.0.2403" />
+        <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="3.0.682" />
+        <PackageReference Include="Soenneker.Utils.Test" Version="3.0.294" />
+        <PackageReference Include="Soenneker.Tests.Unit" Version="3.0.924" />
+        <PackageReference Include="xUnit.v3" Version="3.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\soenneker.gen.adapt\test\Soenneker.Gen.Adapt.Tests.Types\Soenneker.Gen.Adapt.Tests.Types.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+</Project>

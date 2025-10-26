@@ -1,0 +1,20 @@
+@page "/field-pattern"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Field Pattern Test</PageTitle>
+
+<h1>Field Pattern Test</h1>
+
+<button class="btn btn-primary" @onclick="TestFieldPattern">Test Field Pattern</button>
+
+@code {
+    private ExternalSourceDto _sourceDto = new ExternalSourceDto { Id = "test-123" };
+
+    private void TestFieldPattern()
+    {
+        // Pattern: field.Adapt<Type>()
+        var dest = _sourceDto.Adapt<ExternalDestDto>();
+    }
+}
+
+

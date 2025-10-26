@@ -1,0 +1,39 @@
+@page "/generic-pattern"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Generic Pattern Test</PageTitle>
+
+<h1>Generic Pattern Test</h1>
+
+<button class="btn btn-primary" @onclick="TestGenericPattern">Test Generic Pattern</button>
+
+@code {
+    private List<ExternalSourceDto> _sourceList =
+    [
+        new ExternalSourceDto { Id = "generic-1" },
+
+        new ExternalSourceDto { Id = "generic-2" }
+    ];
+
+    private void TestGenericPattern()
+    {
+        // Pattern: Adapt calls with List<T> generic collections
+        var adaptedList = _sourceList.Adapt<List<ExternalDestDto>>();
+        
+        // Pattern: Adapt calls in generic methods with type inference
+        List<ExternalDestDto> methodAdapted = ProcessGenericList(_sourceList);
+        
+        // Pattern: Adapt calls with Dictionary<TKey, TValue>
+        var sourceDict = new Dictionary<string, ExternalSourceDto>
+        {
+            ["key1"] = new ExternalSourceDto { Id = "dict-1" },
+            ["key2"] = new ExternalSourceDto { Id = "dict-2" }
+        };
+        var adaptedDict = sourceDict.Adapt<Dictionary<string, ExternalDestDto>>();
+    }
+    
+    private List<ExternalDestDto> ProcessGenericList(List<ExternalSourceDto> sources)
+    {
+        return sources.Adapt<List<ExternalDestDto>>();
+    }
+}

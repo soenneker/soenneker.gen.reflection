@@ -1,0 +1,34 @@
+@page "/conditional-pattern"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Conditional Pattern Test</PageTitle>
+
+<h1>Conditional Pattern Test</h1>
+
+<button class="btn btn-primary" @onclick="TestConditionalPattern">Test Conditional Pattern</button>
+
+@code {
+    private ExternalSourceDto _sourceDto = new ExternalSourceDto { Id = "conditional-test" };
+    private bool _useAdapt = true;
+
+    private void TestConditionalPattern()
+    {
+        ExternalDestDto result;
+        
+        // Pattern: Adapt calls in conditional statements
+        if (_useAdapt)
+        {
+            result = _sourceDto.Adapt<ExternalDestDto>();
+        }
+        else
+        {
+            result = new ExternalDestDto { Id = "fallback" };
+        }
+        
+        // Pattern: Adapt calls in ternary operator
+        ExternalDestDto alternateResult = _useAdapt 
+            ? _sourceDto.Adapt<ExternalDestDto>() 
+            : new ExternalDestDto { Id = "ternary-fallback" };
+    }
+}
+

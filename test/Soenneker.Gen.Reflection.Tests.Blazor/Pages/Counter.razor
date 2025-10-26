@@ -1,0 +1,25 @@
+﻿@page "/counter"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<div class="mt-4">
+    <a href="/pattern-overview" class="btn btn-success">View All Adapt Patterns</a>
+</div>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        var x = new ExternalDestDto().Adapt<ExternalSourceDto>();
+
+        currentCount++;
+    }
+}
