@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Soenneker.Gen.Reflection;
 using AwesomeAssertions;
 using Xunit;
 
@@ -9,7 +8,7 @@ namespace Soenneker.Gen.Reflection.Tests;
 public class GetTypeGenUnitTests
 {
     [Fact]
-    public void GetTypeGen_WithPrimitiveTypes_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithPrimitiveTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
         var intValue = 42;
@@ -17,143 +16,143 @@ public class GetTypeGenUnitTests
         var boolValue = true;
 
         // Act
-        var intTypeInfo = intValue.GetTypeGen();
-        var stringTypeInfo = stringValue.GetTypeGen();
-        var boolTypeInfo = boolValue.GetTypeGen();
+        TypeInfoGen intTypeInfoGen = intValue.GetTypeGen();
+        TypeInfoGen stringTypeInfoGen = stringValue.GetTypeGen();
+        TypeInfoGen boolTypeInfoGen = boolValue.GetTypeGen();
 
         // Assert
-        intTypeInfo.Name.Should().Be("Int32");
-        intTypeInfo.IsValueType.Should().BeTrue();
-        intTypeInfo.IsReferenceType.Should().BeFalse();
-        intTypeInfo.IsGenericType.Should().BeFalse();
-        intTypeInfo.IsNullable.Should().BeFalse();
+        intTypeInfoGen.Name.Should().Be("Int32");
+        intTypeInfoGen.IsValueType.Should().BeTrue();
+        intTypeInfoGen.IsReferenceType.Should().BeFalse();
+        intTypeInfoGen.IsGenericType.Should().BeFalse();
+        intTypeInfoGen.IsNullable.Should().BeFalse();
 
-        stringTypeInfo.Name.Should().Be("String");
-        stringTypeInfo.IsValueType.Should().BeFalse();
-        stringTypeInfo.IsReferenceType.Should().BeTrue();
-        stringTypeInfo.IsGenericType.Should().BeFalse();
-        stringTypeInfo.IsNullable.Should().BeFalse();
+        stringTypeInfoGen.Name.Should().Be("String");
+        stringTypeInfoGen.IsValueType.Should().BeFalse();
+        stringTypeInfoGen.IsReferenceType.Should().BeTrue();
+        stringTypeInfoGen.IsGenericType.Should().BeFalse();
+        stringTypeInfoGen.IsNullable.Should().BeFalse();
 
-        boolTypeInfo.Name.Should().Be("Boolean");
-        boolTypeInfo.IsValueType.Should().BeTrue();
-        boolTypeInfo.IsReferenceType.Should().BeFalse();
+        boolTypeInfoGen.Name.Should().Be("Boolean");
+        boolTypeInfoGen.IsValueType.Should().BeTrue();
+        boolTypeInfoGen.IsReferenceType.Should().BeFalse();
     }
 
     [Fact]
-    public void GetTypeGen_WithNullableTypes_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithNullableTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
         int? nullableInt = 42;
         var nullableString = "test";
 
         // Act
-        var nullableIntTypeInfo = nullableInt.GetTypeGen();
-        var nullableStringTypeInfo = nullableString.GetTypeGen();
+        TypeInfoGen nullableIntTypeInfoGen = nullableInt.GetTypeGen();
+        TypeInfoGen nullableStringTypeInfoGen = nullableString.GetTypeGen();
 
         // Assert
-        nullableIntTypeInfo.Name.Should().Be("Nullable`1");
-        nullableIntTypeInfo.IsValueType.Should().BeTrue();
-        nullableIntTypeInfo.IsGenericType.Should().BeTrue();
-        nullableIntTypeInfo.IsNullable.Should().BeTrue();
-        nullableIntTypeInfo.UnderlyingType.Should().NotBeNull();
-        nullableIntTypeInfo.UnderlyingType.Value.Name.Should().Be("Int32");
+        nullableIntTypeInfoGen.Name.Should().Be("Nullable`1");
+        nullableIntTypeInfoGen.IsValueType.Should().BeTrue();
+        nullableIntTypeInfoGen.IsGenericType.Should().BeTrue();
+        nullableIntTypeInfoGen.IsNullable.Should().BeTrue();
+        nullableIntTypeInfoGen.UnderlyingType.Should().NotBeNull();
+        nullableIntTypeInfoGen.UnderlyingType.Value.Name.Should().Be("Int32");
 
         // String is reference type, so nullable string is still reference type
-        nullableStringTypeInfo.Name.Should().Be("String");
-        nullableStringTypeInfo.IsValueType.Should().BeFalse();
-        nullableStringTypeInfo.IsReferenceType.Should().BeTrue();
+        nullableStringTypeInfoGen.Name.Should().Be("String");
+        nullableStringTypeInfoGen.IsValueType.Should().BeFalse();
+        nullableStringTypeInfoGen.IsReferenceType.Should().BeTrue();
     }
 
     [Fact]
-    public void GetTypeGen_WithGenericTypes_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithGenericTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
         var list = new List<string>();
         var dict = new Dictionary<string, int>();
 
         // Act
-        var listTypeInfo = list.GetTypeGen();
-        var dictTypeInfo = dict.GetTypeGen();
+        TypeInfoGen listTypeInfoGen = list.GetTypeGen();
+        TypeInfoGen dictTypeInfoGen = dict.GetTypeGen();
 
         // Assert
-        listTypeInfo.Name.Should().Be("List`1");
-        listTypeInfo.IsGenericType.Should().BeTrue();
-        listTypeInfo.IsReferenceType.Should().BeTrue();
-        listTypeInfo.GenericTypeArguments.Length.Should().Be(1);
-        listTypeInfo.GenericTypeArguments[0].Name.Should().Be("String");
+        listTypeInfoGen.Name.Should().Be("List`1");
+        listTypeInfoGen.IsGenericType.Should().BeTrue();
+        listTypeInfoGen.IsReferenceType.Should().BeTrue();
+        listTypeInfoGen.GenericTypeArguments.Length.Should().Be(1);
+        listTypeInfoGen.GenericTypeArguments[0].Name.Should().Be("String");
 
-        dictTypeInfo.Name.Should().Be("Dictionary`2");
-        dictTypeInfo.IsGenericType.Should().BeTrue();
-        dictTypeInfo.IsReferenceType.Should().BeTrue();
-        dictTypeInfo.GenericTypeArguments.Length.Should().Be(2);
-        dictTypeInfo.GenericTypeArguments[0].Name.Should().Be("String");
-        dictTypeInfo.GenericTypeArguments[1].Name.Should().Be("Int32");
+        dictTypeInfoGen.Name.Should().Be("Dictionary`2");
+        dictTypeInfoGen.IsGenericType.Should().BeTrue();
+        dictTypeInfoGen.IsReferenceType.Should().BeTrue();
+        dictTypeInfoGen.GenericTypeArguments.Length.Should().Be(2);
+        dictTypeInfoGen.GenericTypeArguments[0].Name.Should().Be("String");
+        dictTypeInfoGen.GenericTypeArguments[1].Name.Should().Be("Int32");
     }
 
     [Fact]
-    public void GetTypeGen_WithCustomTypes_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithCustomTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
         var person = new TestPerson { Name = "John", Age = 30 };
 
         // Act
-        var personTypeInfo = person.GetTypeGen();
+        TypeInfoGen personTypeInfoGen = person.GetTypeGen();
 
         // Assert
-        personTypeInfo.Name.Should().Be("TestPerson");
-        personTypeInfo.IsReferenceType.Should().BeTrue();
-        personTypeInfo.IsValueType.Should().BeFalse();
-        personTypeInfo.IsGenericType.Should().BeFalse();
-        personTypeInfo.IsNullable.Should().BeFalse();
+        personTypeInfoGen.Name.Should().Be("TestPerson");
+        personTypeInfoGen.IsReferenceType.Should().BeTrue();
+        personTypeInfoGen.IsValueType.Should().BeFalse();
+        personTypeInfoGen.IsGenericType.Should().BeFalse();
+        personTypeInfoGen.IsNullable.Should().BeFalse();
 
         // Check properties
-        var properties = personTypeInfo.Properties;
+        PropertyInfoGen[] properties = personTypeInfoGen.Properties;
         properties.Length.Should().BeGreaterThan(0);
         
-        var nameProperty = personTypeInfo.GetProperty("Name");
+        PropertyInfoGen? nameProperty = personTypeInfoGen.GetProperty("Name");
         nameProperty.HasValue.Should().BeTrue();
         nameProperty.Value.Name.Should().Be("Name");
         nameProperty.Value.PropertyType.Name.Should().Be("String");
         nameProperty.Value.CanRead.Should().BeTrue();
         nameProperty.Value.CanWrite.Should().BeTrue();
 
-        var ageProperty = personTypeInfo.GetProperty("Age");
+        PropertyInfoGen? ageProperty = personTypeInfoGen.GetProperty("Age");
         ageProperty.HasValue.Should().BeTrue();
         ageProperty.Value.Name.Should().Be("Age");
         ageProperty.Value.PropertyType.Name.Should().Be("Int32");
     }
 
     [Fact]
-    public void GetTypeGen_WithStaticGenericMethod_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithStaticGenericMethod_ReturnsCorrectTypeInfoGen()
     {
         // Act
         var list = new List<string>();
-        var listTypeInfo = list.GetTypeGen();
+        TypeInfoGen listTypeInfoGen = list.GetTypeGen();
         var dict = new Dictionary<int, string>();
-        var dictTypeInfo = dict.GetTypeGen();
+        TypeInfoGen dictTypeInfoGen = dict.GetTypeGen();
 
         // Assert
-        listTypeInfo.Name.Should().Be("List`1");
-        listTypeInfo.IsGenericType.Should().BeTrue();
-        listTypeInfo.GenericTypeArguments.Length.Should().Be(1);
-        listTypeInfo.GenericTypeArguments[0].Name.Should().Be("String");
+        listTypeInfoGen.Name.Should().Be("List`1");
+        listTypeInfoGen.IsGenericType.Should().BeTrue();
+        listTypeInfoGen.GenericTypeArguments.Length.Should().Be(1);
+        listTypeInfoGen.GenericTypeArguments[0].Name.Should().Be("String");
 
-        dictTypeInfo.Name.Should().Be("Dictionary`2");
-        dictTypeInfo.IsGenericType.Should().BeTrue();
-        dictTypeInfo.GenericTypeArguments.Length.Should().Be(2);
-        dictTypeInfo.GenericTypeArguments[0].Name.Should().Be("Int32");
-        dictTypeInfo.GenericTypeArguments[1].Name.Should().Be("String");
+        dictTypeInfoGen.Name.Should().Be("Dictionary`2");
+        dictTypeInfoGen.IsGenericType.Should().BeTrue();
+        dictTypeInfoGen.GenericTypeArguments.Length.Should().Be(2);
+        dictTypeInfoGen.GenericTypeArguments[0].Name.Should().Be("Int32");
+        dictTypeInfoGen.GenericTypeArguments[1].Name.Should().Be("String");
     }
 
     [Fact]
-    public void GetTypeGen_WithMethodAccess_ReturnsCorrectMethodInfo()
+    public void GetTypeGen_WithMethodAccess_ReturnsCorrectMethodInfoGen()
     {
         // Arrange
         var person = new TestPerson { Name = "Jane", Age = 25 };
 
         // Act
-        var personTypeInfo = person.GetTypeGen();
-        var toStringMethod = personTypeInfo.GetMethod("ToString");
+        TypeInfoGen personTypeInfoGen = person.GetTypeGen();
+        MethodInfoGen? toStringMethod = personTypeInfoGen.GetMethod("ToString");
 
         // Assert
         toStringMethod.HasValue.Should().BeTrue();
@@ -164,21 +163,21 @@ public class GetTypeGenUnitTests
     }
 
     [Fact]
-    public void GetTypeGen_WithFieldAccess_ReturnsCorrectFieldInfo()
+    public void GetTypeGen_WithFieldAccess_ReturnsCorrectFieldInfoGen()
     {
         // Arrange
         var person = new TestPerson { Name = "Bob", Age = 35 };
 
         // Act
-        var personTypeInfo = person.GetTypeGen();
-        var fields = personTypeInfo.Fields;
+        TypeInfoGen personTypeInfoGen = person.GetTypeGen();
+        FieldInfoGen[] fields = personTypeInfoGen.Fields;
 
         // Assert
         fields.Length.Should().BeGreaterThan(0);
         
         // Find a field (assuming TestPerson has fields)
         var fieldFound = false;
-        foreach (var field in fields)
+        foreach (FieldInfoGen field in fields)
         {
             if (!string.IsNullOrEmpty(field.Name))
             {
@@ -199,22 +198,22 @@ public class GetTypeGenUnitTests
         var person = new TestPerson { Name = "Alice", Age = 28 };
 
         // Act
-        var personTypeInfo = person.GetTypeGen();
-        var nameProperty = personTypeInfo.GetProperty("Name");
-        var ageProperty = personTypeInfo.GetProperty("Age");
+        TypeInfoGen personTypeInfoGen = person.GetTypeGen();
+        PropertyInfoGen? nameProperty = personTypeInfoGen.GetProperty("Name");
+        PropertyInfoGen? ageProperty = personTypeInfoGen.GetProperty("Age");
 
         // Assert
         nameProperty.HasValue.Should().BeTrue();
-        var nameValue = nameProperty.Value.GetValue(person);
+        object? nameValue = nameProperty.Value.GetValue(person);
         nameValue.Should().Be("Alice");
 
         ageProperty.HasValue.Should().BeTrue();
-        var ageValue = ageProperty.Value.GetValue(person);
+        object? ageValue = ageProperty.Value.GetValue(person);
         ageValue.Should().Be(28);
     }
 
     [Fact]
-    public void GetTypeGen_WithComplexNestedTypes_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithComplexNestedTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
         var company = new TestCompany
@@ -228,11 +227,11 @@ public class GetTypeGenUnitTests
         };
 
         // Act
-        var companyTypeInfo = company.GetTypeGen();
-        var employeesProperty = companyTypeInfo.GetProperty("Employees");
+        TypeInfoGen companyTypeInfoGen = company.GetTypeGen();
+        PropertyInfoGen? employeesProperty = companyTypeInfoGen.GetProperty("Employees");
 
         // Assert
-        companyTypeInfo.Name.Should().Be("TestCompany");
+        companyTypeInfoGen.Name.Should().Be("TestCompany");
         employeesProperty.HasValue.Should().BeTrue();
         employeesProperty.Value.PropertyType.Name.Should().Be("List`1");
         employeesProperty.Value.PropertyType.IsGenericType.Should().BeTrue();
@@ -241,45 +240,45 @@ public class GetTypeGenUnitTests
     }
 
     [Fact]
-    public void GetTypeGen_WithArrayTypes_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithArrayTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
         int[] intArray = { 1, 2, 3 };
         string[] stringArray = { "a", "b", "c" };
 
         // Act
-        var intArrayTypeInfo = intArray.GetTypeGen();
-        var stringArrayTypeInfo = stringArray.GetTypeGen();
+        TypeInfoGen intArrayTypeInfoGen = intArray.GetTypeGen();
+        TypeInfoGen stringArrayTypeInfoGen = stringArray.GetTypeGen();
 
         // Assert
-        intArrayTypeInfo.Name.Should().Be("Int32[]");
-        intArrayTypeInfo.IsReferenceType.Should().BeTrue();
-        intArrayTypeInfo.IsValueType.Should().BeFalse();
+        intArrayTypeInfoGen.Name.Should().Be("Int32[]");
+        intArrayTypeInfoGen.IsReferenceType.Should().BeTrue();
+        intArrayTypeInfoGen.IsValueType.Should().BeFalse();
 
-        stringArrayTypeInfo.Name.Should().Be("String[]");
-        stringArrayTypeInfo.IsReferenceType.Should().BeTrue();
-        stringArrayTypeInfo.IsValueType.Should().BeFalse();
+        stringArrayTypeInfoGen.Name.Should().Be("String[]");
+        stringArrayTypeInfoGen.IsReferenceType.Should().BeTrue();
+        stringArrayTypeInfoGen.IsValueType.Should().BeFalse();
     }
 
     [Fact]
-    public void GetTypeGen_WithDateTimeTypes_ReturnsCorrectTypeInfo()
+    public void GetTypeGen_WithDateTimeTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
-        var dateTime = DateTime.Now;
-        var timeSpan = TimeSpan.FromHours(1);
+        DateTime dateTime = DateTime.Now;
+        TimeSpan timeSpan = TimeSpan.FromHours(1);
 
         // Act
-        var dateTimeTypeInfo = dateTime.GetTypeGen();
-        var timeSpanTypeInfo = timeSpan.GetTypeGen();
+        TypeInfoGen dateTimeTypeInfoGen = dateTime.GetTypeGen();
+        TypeInfoGen timeSpanTypeInfoGen = timeSpan.GetTypeGen();
 
         // Assert
-        dateTimeTypeInfo.Name.Should().Be("DateTime");
-        dateTimeTypeInfo.IsValueType.Should().BeTrue();
-        dateTimeTypeInfo.IsReferenceType.Should().BeFalse();
+        dateTimeTypeInfoGen.Name.Should().Be("DateTime");
+        dateTimeTypeInfoGen.IsValueType.Should().BeTrue();
+        dateTimeTypeInfoGen.IsReferenceType.Should().BeFalse();
 
-        timeSpanTypeInfo.Name.Should().Be("TimeSpan");
-        timeSpanTypeInfo.IsValueType.Should().BeTrue();
-        timeSpanTypeInfo.IsReferenceType.Should().BeFalse();
+        timeSpanTypeInfoGen.Name.Should().Be("TimeSpan");
+        timeSpanTypeInfoGen.IsValueType.Should().BeTrue();
+        timeSpanTypeInfoGen.IsReferenceType.Should().BeFalse();
     }
 }
 
@@ -290,6 +289,7 @@ public class TestPerson
 {
     public string Name { get; set; } = string.Empty;
     public int Age { get; set; }
+    public TestCompany? Company { get; set; }
     private readonly string _id = Guid.NewGuid().ToString();
 
     public override string ToString()
@@ -306,4 +306,5 @@ public class TestCompany
     public string Name { get; set; } = string.Empty;
     public List<TestPerson> Employees { get; set; } = new();
     public DateTime FoundedDate { get; set; }
+    public int EmployeeCount { get; set; }
 }

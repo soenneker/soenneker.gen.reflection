@@ -1,4 +1,4 @@
-﻿namespace Soenneker.Gen.Reflection.Tests.NuGet;
+namespace Soenneker.Gen.Reflection.Tests.NuGet;
 
 public class Class1
 {
