@@ -41,9 +41,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\soenneker.gen.adapt\test\Soenneker.Gen.Adapt.Tests.Types\Soenneker.Gen.Adapt.Tests.Types.csproj" />
         <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-        <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection.csproj" />
     </ItemGroup>
 
 </Project>

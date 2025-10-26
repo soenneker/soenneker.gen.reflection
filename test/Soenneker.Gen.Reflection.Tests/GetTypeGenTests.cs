@@ -12,13 +12,13 @@ public class GetTypeGenTests
     public void BasicUsageTests()
     {
         // Test with primitive types
-        int intValue = 42;
+        var intValue = 42;
         var intTypeInfo = intValue.GetTypeGen();
         Console.WriteLine($"Int type name: {intTypeInfo.Name}");
         Console.WriteLine($"Int is value type: {intTypeInfo.IsValueType}");
 
         // Test with string
-        string stringValue = "Hello World";
+        var stringValue = "Hello World";
         var stringTypeInfo = stringValue.GetTypeGen();
         Console.WriteLine($"String type name: {stringTypeInfo.Name}");
         Console.WriteLine($"String is reference type: {stringTypeInfo.IsReferenceType}");

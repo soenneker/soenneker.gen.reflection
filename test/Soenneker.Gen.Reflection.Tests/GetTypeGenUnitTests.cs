@@ -12,9 +12,9 @@ public class GetTypeGenUnitTests
     public void GetTypeGen_WithPrimitiveTypes_ReturnsCorrectTypeInfo()
     {
         // Arrange
-        int intValue = 42;
-        string stringValue = "test";
-        bool boolValue = true;
+        var intValue = 42;
+        var stringValue = "test";
+        var boolValue = true;
 
         // Act
         var intTypeInfo = intValue.GetTypeGen();
@@ -44,7 +44,7 @@ public class GetTypeGenUnitTests
     {
         // Arrange
         int? nullableInt = 42;
-        string? nullableString = "test";
+        var nullableString = "test";
 
         // Act
         var nullableIntTypeInfo = nullableInt.GetTypeGen();

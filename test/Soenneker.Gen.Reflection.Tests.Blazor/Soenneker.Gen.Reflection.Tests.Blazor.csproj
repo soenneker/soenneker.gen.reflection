@@ -21,4 +21,8 @@
         <ProjectReference Include="..\Soenneker.Gen.Reflection.Tests.Types\Soenneker.Gen.Reflection.Tests.Types.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Pages\" />
+    </ItemGroup>
+
 </Project>

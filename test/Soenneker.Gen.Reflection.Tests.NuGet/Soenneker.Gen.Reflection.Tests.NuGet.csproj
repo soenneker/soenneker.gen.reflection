@@ -8,13 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Soenneker.Gen.Reflection" Version="3.0.37">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Soenneker.Gen.Reflection.Tests.Types\Soenneker.Gen.Reflection.Tests.Types.csproj" />
     </ItemGroup>
 

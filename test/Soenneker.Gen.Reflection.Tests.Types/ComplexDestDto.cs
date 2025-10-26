@@ -1,4 +1,4 @@
-namespace Soenneker.Gen.Adapt.Tests.Types;
+namespace Soenneker.Gen.Reflection.Tests.Types;
 
 public class ComplexDestDto
 {
