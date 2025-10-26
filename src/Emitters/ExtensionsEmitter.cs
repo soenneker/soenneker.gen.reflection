@@ -34,30 +34,48 @@ internal static class ExtensionsEmitter
             sb.AppendLine("public static partial class TypeGenExtensions");
             sb.AppendLine("{");
 
+            // Generate cached TypeInfoGen instances first
             foreach (ITypeSymbol? typeSymbol in generatedTypes)
             {
                 if (typeSymbol == null) continue;
                 
                 string typeName = typeSymbol.ToDisplayString();
+                string className = Emitter.SanitizeTypeName(typeSymbol.ToDisplayString());
                 
-                // Generate instance method replacement using optimized constructor
+                // Generate cached static readonly field
+                sb.AppendLine($"    /// <summary>");
+                sb.AppendLine($"    /// Cached TypeInfoGen instance for {typeName}");
+                sb.AppendLine($"    /// </summary>");
+                sb.AppendLine($"    private static readonly TypeInfoGen _{className}TypeInfo = ");
+                sb.AppendLine($"        new TypeInfoGen(\"{Emitter.GetTypeName(typeSymbol)}\", \"{typeSymbol.ToDisplayString()}\", \"{typeSymbol.ToDisplayString()}, {typeSymbol.ContainingAssembly?.Name ?? "Unknown"}\", {typeSymbol.IsValueType.ToString().ToLower()}, {typeSymbol.IsReferenceType.ToString().ToLower()}, {(typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType).ToString().ToLower()}, {Emitter.IsNullableType(typeSymbol).ToString().ToLower()}, ");
+                
+                // For array types, use empty arrays
+                if (typeSymbol is IArrayTypeSymbol)
+                {
+                    sb.AppendLine($"            Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), {Emitter.GetUnderlyingTypeName(typeSymbol)}, {Emitter.GetGenericTypeArgumentNames(typeSymbol)});");
+                }
+                else
+                {
+                    sb.AppendLine($"            {className}TypeInfoGen.Fields, {className}TypeInfoGen.Properties, {className}TypeInfoGen.Methods, {Emitter.GetUnderlyingTypeName(typeSymbol)}, {Emitter.GetGenericTypeArgumentNames(typeSymbol)});");
+                }
+                sb.AppendLine();
+            }
+            
+            // Generate GetTypeGen extension methods that return cached instances
+            foreach (ITypeSymbol? typeSymbol in generatedTypes)
+            {
+                if (typeSymbol == null) continue;
+                
+                string typeName = typeSymbol.ToDisplayString();
+                string className = Emitter.SanitizeTypeName(typeSymbol.ToDisplayString());
+                
+                // Generate instance method replacement that returns cached instance
                 sb.AppendLine($"    /// <summary>");
                 sb.AppendLine($"    /// Generated GetTypeGen for {typeName}");
                 sb.AppendLine($"    /// </summary>");
                 sb.AppendLine($"    public static TypeInfoGen GetTypeGen(this {typeName} obj)");
                 sb.AppendLine($"    {{");
-                
-                // For array types, use empty arrays instead of trying to access non-existent TypeInfoGen properties
-                if (typeSymbol is IArrayTypeSymbol)
-                {
-                    sb.AppendLine($"        return new TypeInfoGen(\"{Emitter.GetTypeName(typeSymbol)}\", \"{typeSymbol.ToDisplayString()}\", \"{typeSymbol.ToDisplayString()}, {typeSymbol.ContainingAssembly?.Name ?? "Unknown"}\", {typeSymbol.IsValueType.ToString().ToLower()}, {typeSymbol.IsReferenceType.ToString().ToLower()}, {(typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType).ToString().ToLower()}, {Emitter.IsNullableType(typeSymbol).ToString().ToLower()}, Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), {Emitter.GetUnderlyingTypeName(typeSymbol)}, {Emitter.GetGenericTypeArgumentNames(typeSymbol)});");
-                }
-                else
-                {
-                    string className = Emitter.SanitizeTypeName(typeSymbol.ToDisplayString());
-                    sb.AppendLine($"        return new TypeInfoGen(\"{Emitter.GetTypeName(typeSymbol)}\", \"{typeSymbol.ToDisplayString()}\", \"{typeSymbol.ToDisplayString()}, {typeSymbol.ContainingAssembly?.Name ?? "Unknown"}\", {typeSymbol.IsValueType.ToString().ToLower()}, {typeSymbol.IsReferenceType.ToString().ToLower()}, {(typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType).ToString().ToLower()}, {Emitter.IsNullableType(typeSymbol).ToString().ToLower()}, {className}TypeInfoGen.Fields, {className}TypeInfoGen.Properties, {className}TypeInfoGen.Methods, {Emitter.GetUnderlyingTypeName(typeSymbol)}, {Emitter.GetGenericTypeArgumentNames(typeSymbol)});");
-                }
-                
+                sb.AppendLine($"        return _{className}TypeInfo;");
                 sb.AppendLine($"    }}");
                 sb.AppendLine();
             }
@@ -68,7 +86,7 @@ internal static class ExtensionsEmitter
             
             Emitter.AddSource(context, "TypeGenExtensions.g.cs", sb);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Create a minimal file even if there's an error
             var sb = new StringBuilder();

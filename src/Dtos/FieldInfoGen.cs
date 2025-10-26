@@ -1,7 +1,6 @@
-using Soenneker.Gen.Reflection.Dtos;
 using System;
 
-namespace Soenneker.Gen.Reflection;
+namespace Soenneker.Gen.Reflection.Dtos;
 
 /// <summary>
 /// Represents compile-time generated field information
