@@ -21,16 +21,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="15.1.0" />
+ 
         <PackageReference Include="AwesomeAssertions" Version="9.2.1" />
-        <PackageReference Include="Facet.Extensions" Version="3.1.14" />
+   
         <PackageReference Include="Mapster" Version="9.0.0-pre01" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
         <PackageReference Include="coverlet.collector" Version="6.0.4">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Riok.Mapperly" Version="4.3.0" />
+
         <PackageReference Include="Soenneker.Facts.Local" Version="3.0.521" />
         <PackageReference Include="Soenneker.Tests.Benchmark" Version="3.0.47" />
         <PackageReference Include="Soenneker.Documents.Audit" Version="3.0.2403" />
@@ -43,6 +43,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\soenneker.gen.adapt\test\Soenneker.Gen.Adapt.Tests.Types\Soenneker.Gen.Adapt.Tests.Types.csproj" />
         <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection.csproj" />
     </ItemGroup>
 
 </Project>
