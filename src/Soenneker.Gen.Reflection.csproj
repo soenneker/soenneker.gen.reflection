@@ -14,7 +14,7 @@
 
     <PropertyGroup>
         <Description>Compile-time reflection for .NET</Description>
-        <Version Condition="'$(BUILD_VERSION)' == ''">3.0.0</Version>
+        <Version Condition="'$(BUILD_VERSION)' == ''">4.0.0</Version>
         <Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
         <AssemblyName>Soenneker.Gen.Reflection</AssemblyName>
         <PackageId>Soenneker.Gen.Reflection</PackageId>
