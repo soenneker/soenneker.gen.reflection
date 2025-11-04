@@ -27,7 +27,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Soenneker.Facts.Local" Version="4.0.526" />
+        <PackageReference Include="Soenneker.Facts.Local" Version="4.0.527" />
         <PackageReference Include="Soenneker.Tests.Benchmark" Version="4.0.51" />
         <PackageReference Include="Soenneker.Documents.Audit" Version="4.0.2409" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.684" />
