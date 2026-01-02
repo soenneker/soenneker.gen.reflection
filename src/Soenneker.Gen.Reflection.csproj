@@ -19,7 +19,7 @@
         <AssemblyName>Soenneker.Gen.Reflection</AssemblyName>
         <PackageId>Soenneker.Gen.Reflection</PackageId>
         <PackageTags>gen reflection soenneker source generator generation genreflection util csharp dotnet c# .net</PackageTags>
-        <Copyright>Copyright © 2025 Jake Soenneker</Copyright>
+        <Copyright>Copyright © 2025-2026 Jake Soenneker</Copyright>
         <Authors>Jake Soenneker</Authors>
         <Company>https://soenneker.com</Company>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
