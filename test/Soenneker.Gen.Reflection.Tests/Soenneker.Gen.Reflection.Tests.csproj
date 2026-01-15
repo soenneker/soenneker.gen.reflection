@@ -27,7 +27,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Soenneker.Facts.Local" Version="4.0.551" />
-        <PackageReference Include="Soenneker.Tests.Benchmark" Version="4.0.61" />
+        <PackageReference Include="Soenneker.Tests.Benchmark" Version="4.0.62" />
         <PackageReference Include="Soenneker.Documents.Audit" Version="4.0.2437" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.689" />
         <PackageReference Include="Soenneker.Utils.Test" Version="4.0.301" />
