@@ -9,6 +9,8 @@
         <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+        <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
+
     </PropertyGroup>
 
     <ItemGroup>
