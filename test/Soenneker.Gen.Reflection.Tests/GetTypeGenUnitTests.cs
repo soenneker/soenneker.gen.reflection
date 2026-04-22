@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using AwesomeAssertions;
-using Xunit;
 
 namespace Soenneker.Gen.Reflection.Tests;
 
 public class GetTypeGenUnitTests
 {
-    [Fact]
+    [Test]
     public void GetTypeGen_WithPrimitiveTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
@@ -38,7 +37,7 @@ public class GetTypeGenUnitTests
         boolTypeInfoGen.IsReferenceType.Should().BeFalse();
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithNullableTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
@@ -63,7 +62,7 @@ public class GetTypeGenUnitTests
         nullableStringTypeInfoGen.IsReferenceType.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithGenericTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
@@ -89,7 +88,7 @@ public class GetTypeGenUnitTests
         dictTypeInfoGen.GenericTypeArguments[1].Name.Should().Be("Int32");
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithCustomTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
@@ -122,7 +121,7 @@ public class GetTypeGenUnitTests
         ageProperty.Value.PropertyType.Name.Should().Be("Int32");
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithStaticGenericMethod_ReturnsCorrectTypeInfoGen()
     {
         // Act
@@ -144,7 +143,7 @@ public class GetTypeGenUnitTests
         dictTypeInfoGen.GenericTypeArguments[1].Name.Should().Be("String");
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithMethodAccess_ReturnsCorrectMethodInfoGen()
     {
         // Arrange
@@ -162,7 +161,7 @@ public class GetTypeGenUnitTests
         toStringMethod.Value.ParameterTypes.Length.Should().Be(0);
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithFieldAccess_ReturnsCorrectFieldInfoGen()
     {
         // Arrange
@@ -191,7 +190,7 @@ public class GetTypeGenUnitTests
         // In a real scenario, you'd have actual fields to test
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithPropertyValueAccess_WorksCorrectly()
     {
         // Arrange
@@ -212,7 +211,7 @@ public class GetTypeGenUnitTests
         ageValue.Should().Be(28);
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithComplexNestedTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
@@ -239,7 +238,7 @@ public class GetTypeGenUnitTests
         employeesProperty.Value.PropertyType.GenericTypeArguments[0].Name.Should().Be("TestPerson");
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithArrayTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange
@@ -260,7 +259,7 @@ public class GetTypeGenUnitTests
         stringArrayTypeInfoGen.IsValueType.Should().BeFalse();
     }
 
-    [Fact]
+    [Test]
     public void GetTypeGen_WithDateTimeTypes_ReturnsCorrectTypeInfoGen()
     {
         // Arrange

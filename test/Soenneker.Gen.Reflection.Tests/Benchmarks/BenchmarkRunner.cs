@@ -2,18 +2,17 @@ using BenchmarkDotNet.Reports;
 using Soenneker.Benchmarking.Extensions.Summary;
 using Soenneker.Tests.Benchmark;
 using System.Threading.Tasks;
-using Soenneker.Facts.Local;
-using Xunit;
+using Soenneker.Tests.Attributes.Local;
 
 namespace Soenneker.Gen.Reflection.Tests.Benchmarks;
 
 public class BenchmarkRunner : BenchmarkTest
 {
-    public BenchmarkRunner(ITestOutputHelper outputHelper) : base(outputHelper)
+    public BenchmarkRunner() : base()
     {
     }
 
-  //  [LocalFact]
+  //  [LocalOnly]
     public async ValueTask TypeInfoAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<TypeInfoAccessBenchmark>(DefaultConf);
@@ -21,7 +20,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-  //  [LocalFact]
+  //  [LocalOnly]
     public async ValueTask PropertyAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<PropertyAccessBenchmark>(DefaultConf);
@@ -29,7 +28,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-  //  [LocalFact]
+  //  [LocalOnly]
     public async ValueTask FieldAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<FieldAccessBenchmark>(DefaultConf);
@@ -37,7 +36,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
- //   [LocalFact]
+ //   [LocalOnly]
     public async ValueTask MethodAccessBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<MethodAccessBenchmark>(DefaultConf);
@@ -45,7 +44,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
- //   [LocalFact]
+ //   [LocalOnly]
     public async ValueTask ComplexTypeBenchmark()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<ComplexTypeBenchmark>(DefaultConf);
@@ -53,7 +52,7 @@ public class BenchmarkRunner : BenchmarkTest
         await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
     }
 
-  // [LocalFact]
+  // [LocalOnly]
     public async ValueTask SimpleBenchmarkTest()
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<SimpleBenchmarkTest>(DefaultConf);

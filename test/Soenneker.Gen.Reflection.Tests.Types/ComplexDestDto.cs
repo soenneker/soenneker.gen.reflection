@@ -21,5 +21,4 @@ public class NestedDestObjectDto
 public static class Test
 {
 
-
 }

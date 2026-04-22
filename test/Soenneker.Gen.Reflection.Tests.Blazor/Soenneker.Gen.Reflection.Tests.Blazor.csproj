@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -22,7 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\" />
+        <Folder Include="Pages\" />
     </ItemGroup>
-
 </Project>

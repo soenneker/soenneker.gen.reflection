@@ -1,10 +1,9 @@
-using Xunit;
 
 namespace Soenneker.Gen.Reflection.Tests.Benchmarks;
 
 public class BenchmarkSetupTest
 {
-    [Fact]
+    [Test]
     public void BenchmarkSetup_ShouldWork()
     {
         // Simple test to verify the benchmarking setup works
