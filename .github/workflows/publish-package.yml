@@ -49,14 +49,14 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Restore tests
-        run: dotnet restore test/Soenneker.Gen.Reflection.Tests.Blazor/Soenneker.Gen.Reflection.Tests.Blazor.csproj --verbosity minimal
+      - name: Restore
+        run: dotnet restore Soenneker.Gen.Reflection.slnx --verbosity minimal
 
-      - name: Build tests
-        run: dotnet build test/Soenneker.Gen.Reflection.Tests.Blazor/Soenneker.Gen.Reflection.Tests.Blazor.csproj --configuration Release --no-restore --verbosity minimal
+      - name: Build
+        run: dotnet build Soenneker.Gen.Reflection.slnx --configuration Release --no-restore --verbosity minimal
 
       - name: Test
-        run: dotnet test --project test/Soenneker.Gen.Reflection.Tests.Blazor/Soenneker.Gen.Reflection.Tests.Blazor.csproj --configuration Release --no-build --no-restore --verbosity normal
+        run: dotnet test --project test/Soenneker.Gen.Reflection.Tests/Soenneker.Gen.Reflection.Tests.csproj --configuration Release --no-build --no-restore --verbosity normal
 
 
       - name: Restore library
