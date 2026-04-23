@@ -1,9 +1,3 @@
-using BenchmarkDotNet.Reports;
-using Soenneker.Benchmarking.Extensions.Summary;
-using Soenneker.Tests.Benchmark;
-using System.Threading.Tasks;
-using Soenneker.Tests.Attributes.Local;
-
 namespace Soenneker.Gen.Reflection.Tests.Benchmarks;
 
 public class BenchmarkRunner : BenchmarkTest
@@ -17,7 +11,7 @@ public class BenchmarkRunner : BenchmarkTest
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<TypeInfoAccessBenchmark>(DefaultConf);
 
-        await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
+        await summary.OutputSummaryToLog();
     }
 
   //  [LocalOnly]
@@ -25,7 +19,7 @@ public class BenchmarkRunner : BenchmarkTest
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<PropertyAccessBenchmark>(DefaultConf);
 
-        await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
+        await summary.OutputSummaryToLog();
     }
 
   //  [LocalOnly]
@@ -33,7 +27,7 @@ public class BenchmarkRunner : BenchmarkTest
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<FieldAccessBenchmark>(DefaultConf);
 
-        await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
+        await summary.OutputSummaryToLog();
     }
 
  //   [LocalOnly]
@@ -41,7 +35,7 @@ public class BenchmarkRunner : BenchmarkTest
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<MethodAccessBenchmark>(DefaultConf);
 
-        await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
+        await summary.OutputSummaryToLog();
     }
 
  //   [LocalOnly]
@@ -49,7 +43,7 @@ public class BenchmarkRunner : BenchmarkTest
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<ComplexTypeBenchmark>(DefaultConf);
 
-        await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
+        await summary.OutputSummaryToLog();
     }
 
   // [LocalOnly]
@@ -57,6 +51,9 @@ public class BenchmarkRunner : BenchmarkTest
     {
         Summary summary = BenchmarkDotNet.Running.BenchmarkRunner.Run<SimpleBenchmarkTest>(DefaultConf);
 
-        await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
+        await summary.OutputSummaryToLog();
     }
 }
+
+
+

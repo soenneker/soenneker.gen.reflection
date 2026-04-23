@@ -190,9 +190,7 @@ class Program
             Console.WriteLine($"  Is Static: {toStringMethod.Value.IsStatic}");
             Console.WriteLine($"  Parameters: {toStringMethod.Value.ParameterTypes.Length}");
             
-            // Test method invocation
-            var result = toStringMethod.Value.Invoke(person, null);
-            Console.WriteLine($"  Invoke Result: {result}");
+            Console.WriteLine("  Invoke Result: not supported by MethodInfoGen sample surface");
         }
 
         var equalsMethod = personTypeInfo.GetMethod("Equals");

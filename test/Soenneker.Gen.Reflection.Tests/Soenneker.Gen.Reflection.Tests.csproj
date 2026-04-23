@@ -31,5 +31,11 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection\Soenneker.Gen.Reflection.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Benchmarks\**\*.cs" />
+    <Compile Remove="Benchmarking\**\*.cs" />
+  </ItemGroup>
 </Project>
+
+
 

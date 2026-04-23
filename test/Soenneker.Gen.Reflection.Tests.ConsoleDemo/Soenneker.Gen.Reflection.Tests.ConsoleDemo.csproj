@@ -9,6 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection\Soenneker.Gen.Reflection.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.Gen.Reflection\Soenneker.Gen.Reflection.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
     </ItemGroup>
 </Project>
