@@ -40,15 +40,42 @@ public readonly struct TypeInfoGen
         _genericTypeArgumentIds = genericTypeArgumentIds;
     }
 
+    /// <summary>
+    /// Gets or sets id.
+    /// </summary>
     public ulong Id => _id;
+    /// <summary>
+    /// Gets or sets name.
+    /// </summary>
     public string Name => _name;
+    /// <summary>
+    /// Gets or sets full name.
+    /// </summary>
     public string FullName => _fullName;
+    /// <summary>
+    /// Gets or sets assembly qualified name.
+    /// </summary>
     public string AssemblyQualifiedName => _assemblyQualifiedName;
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance is value type.
+    /// </summary>
     public bool IsValueType => _isValueType;
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance is reference type.
+    /// </summary>
     public bool IsReferenceType => _isReferenceType;
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance is generic type.
+    /// </summary>
     public bool IsGenericType => _isGenericType;
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance is nullable.
+    /// </summary>
     public bool IsNullable => _isNullable;
 
+    /// <summary>
+    /// Gets underlying type.
+    /// </summary>
     public TypeInfoGen? UnderlyingType
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -60,6 +87,9 @@ public readonly struct TypeInfoGen
         }
     }
 
+    /// <summary>
+    /// Gets generic type arguments.
+    /// </summary>
     public TypeInfoGen[] GenericTypeArguments
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -75,36 +105,60 @@ public readonly struct TypeInfoGen
         }
     }
 
+    /// <summary>
+    /// Gets properties.
+    /// </summary>
     public PropertyInfoGen[] Properties
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => PropertyRegistry.GetPropertiesForType(_id).ToArray();
     }
 
+    /// <summary>
+    /// Gets fields.
+    /// </summary>
     public FieldInfoGen[] Fields
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => FieldRegistry.GetFieldsForType(_id).ToArray();
     }
 
+    /// <summary>
+    /// Gets methods.
+    /// </summary>
     public MethodInfoGen[] Methods
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => MethodRegistry.GetMethodsForType(_id).ToArray();
     }
 
+    /// <summary>
+    /// Gets property.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The result of the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public PropertyInfoGen? GetProperty(string name)
     {
         return PropertyRegistry.GetPropertyByName(_id, name);
     }
 
+    /// <summary>
+    /// Gets field.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The result of the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public FieldInfoGen? GetField(string name)
     {
         return FieldRegistry.GetFieldByName(_id, name);
     }
 
+    /// <summary>
+    /// Gets method.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The result of the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public MethodInfoGen? GetMethod(string name)
     {

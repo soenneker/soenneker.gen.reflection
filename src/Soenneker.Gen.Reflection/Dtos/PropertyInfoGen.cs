@@ -78,14 +78,34 @@ public readonly struct PropertyInfoGen
         _setter = setter;
     }
 
+    /// <summary>
+    /// Gets or sets id.
+    /// </summary>
     public ulong Id => _id;
+    /// <summary>
+    /// Gets or sets name.
+    /// </summary>
     public string Name => _name;
+    /// <summary>
+    /// Gets or sets property type.
+    /// </summary>
     public TypeInfoGen PropertyType => _propertyTypeId != 0UL
         ? TypeRegistry.GetType(_propertyTypeId)
         : _propertyType;
+    /// <summary>
+    /// Gets or sets a value indicating whether read is allowed.
+    /// </summary>
     public bool CanRead => _canRead;
+    /// <summary>
+    /// Gets or sets a value indicating whether write is allowed.
+    /// </summary>
     public bool CanWrite => _canWrite;
 
+    /// <summary>
+    /// Gets value.
+    /// </summary>
+    /// <param name="obj">The obj.</param>
+    /// <returns>The result of the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public object? GetValue(object? obj)
     {
@@ -94,6 +114,11 @@ public readonly struct PropertyInfoGen
         return null;
     }
 
+    /// <summary>
+    /// Sets value.
+    /// </summary>
+    /// <param name="obj">The obj.</param>
+    /// <param name="value">The value.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetValue(object? obj, object? value)
     {

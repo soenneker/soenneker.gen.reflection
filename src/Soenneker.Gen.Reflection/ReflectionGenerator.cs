@@ -11,9 +11,16 @@ using Soenneker.Gen.Reflection.Emitters;
 
 namespace Soenneker.Gen.Reflection;
 
+/// <summary>
+/// Represents the reflection generator.
+/// </summary>
 [Generator]
 public sealed class ReflectionGenerator : IIncrementalGenerator
 {
+    /// <summary>
+    /// Executes the initialize operation.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Find all invocations - we'll filter for GetTypeGen calls in the Emitter

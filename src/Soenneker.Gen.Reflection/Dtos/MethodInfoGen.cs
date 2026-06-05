@@ -50,12 +50,27 @@ public readonly struct MethodInfoGen
         _parameterTypeIds = parameterTypeIds;
     }
 
+    /// <summary>
+    /// Gets or sets id.
+    /// </summary>
     public ulong Id => _id;
+    /// <summary>
+    /// Gets or sets name.
+    /// </summary>
     public string Name => _name;
+    /// <summary>
+    /// Gets or sets return type.
+    /// </summary>
     public TypeInfoGen ReturnType => _returnTypeId != 0UL
         ? TypeRegistry.GetType(_returnTypeId)
         : new TypeInfoGen(0UL, _returnTypeName, _returnTypeName, _returnTypeName, false, true, false, false, Array.Empty<ulong>(), Array.Empty<ulong>(), Array.Empty<ulong>(), null, null);
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance is static.
+    /// </summary>
     public bool IsStatic => _isStatic;
+    /// <summary>
+    /// Gets parameter types.
+    /// </summary>
     public TypeInfoGen[] ParameterTypes
     {
         get
@@ -73,6 +88,12 @@ public readonly struct MethodInfoGen
         }
     }
 
+    /// <summary>
+    /// Executes the invoke operation.
+    /// </summary>
+    /// <param name="obj">The obj.</param>
+    /// <param name="parameters">The parameters.</param>
+    /// <returns>The result of the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public object? Invoke(object? obj, params object?[] parameters)
     {

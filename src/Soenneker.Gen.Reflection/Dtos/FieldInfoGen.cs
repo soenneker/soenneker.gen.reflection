@@ -61,13 +61,30 @@ public readonly struct FieldInfoGen
         _setter = setter;
     }
 
+    /// <summary>
+    /// Gets or sets id.
+    /// </summary>
     public ulong Id => _id;
+    /// <summary>
+    /// Gets or sets name.
+    /// </summary>
     public string Name => _name;
+    /// <summary>
+    /// Gets or sets field type.
+    /// </summary>
     public TypeInfoGen FieldType => _fieldTypeId != 0UL
         ? TypeRegistry.GetType(_fieldTypeId)
         : new TypeInfoGen(0UL, _fieldTypeName, _fieldTypeName, _fieldTypeName, false, true, false, false, Array.Empty<ulong>(), Array.Empty<ulong>(), Array.Empty<ulong>(), null, null);
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance is read only.
+    /// </summary>
     public bool IsReadOnly => _isReadOnly;
 
+    /// <summary>
+    /// Gets value.
+    /// </summary>
+    /// <param name="obj">The obj.</param>
+    /// <returns>The result of the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public object? GetValue(object? obj)
     {
@@ -76,6 +93,11 @@ public readonly struct FieldInfoGen
         return null;
     }
 
+    /// <summary>
+    /// Sets value.
+    /// </summary>
+    /// <param name="obj">The obj.</param>
+    /// <param name="value">The value.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetValue(object? obj, object? value)
     {
