@@ -24,7 +24,7 @@
         <PackageReference Include="Soenneker.Documents.Audit" Version="4.0.2560" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.719" />
         <PackageReference Include="Soenneker.Utils.Test" Version="4.0.323" />
-        <PackageReference Include="Soenneker.Tests.Unit" Version="4.0.1245" />
+        <PackageReference Include="Soenneker.Tests.Unit" Version="4.0.1246" />
         <PackageReference Include="TUnit" Version="1.63.25" />
     </ItemGroup>
 
