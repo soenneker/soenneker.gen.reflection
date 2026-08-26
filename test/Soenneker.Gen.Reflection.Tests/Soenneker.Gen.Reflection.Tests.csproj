@@ -21,10 +21,10 @@
     <ItemGroup>
         <PackageReference Include="Soenneker.Tests.Attributes.Local" Version="4.0.85" />
         <PackageReference Include="Soenneker.Tests.Benchmark" Version="4.0.146" />
-        <PackageReference Include="Soenneker.Documents.Audit" Version="4.0.2568" />
+        <PackageReference Include="Soenneker.Documents.Audit" Version="4.0.2569" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.721" />
         <PackageReference Include="Soenneker.Utils.Test" Version="4.0.324" />
-        <PackageReference Include="Soenneker.Tests.Unit" Version="4.0.1262" />
+        <PackageReference Include="Soenneker.Tests.Unit" Version="4.0.1264" />
         <PackageReference Include="TUnit" Version="1.65.63" />
     </ItemGroup>
 
