@@ -89,11 +89,11 @@ public readonly struct MethodInfoGen
     }
 
     /// <summary>
-    /// Executes the invoke operation.
+    /// Invokes the method info gen with the supplied payload.
     /// </summary>
-    /// <param name="obj">The obj.</param>
-    /// <param name="parameters">The parameters.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="obj">Object whose member value is being read.</param>
+    /// <param name="parameters">Parameters supplied to the operation.</param>
+    /// <returns>The resulting object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public object? Invoke(object? obj, params object?[] parameters)
     {

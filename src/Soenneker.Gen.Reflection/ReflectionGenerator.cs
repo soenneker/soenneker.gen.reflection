@@ -18,9 +18,9 @@ namespace Soenneker.Gen.Reflection;
 public sealed class ReflectionGenerator : IIncrementalGenerator
 {
     /// <summary>
-    /// Executes the initialize operation.
+    /// Initializes the reflection generator so it is ready for use.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="context">HTTP context containing the Authorization header.</param>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Find all invocations - we'll filter for GetTypeGen calls in the Emitter

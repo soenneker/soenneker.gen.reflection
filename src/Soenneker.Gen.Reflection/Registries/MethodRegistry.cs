@@ -16,6 +16,9 @@ public static class MethodRegistry
     /// <summary>
     /// Registers a method with its ID
     /// </summary>
+    /// <param name="methodId">Identifier of the method to target.</param>
+    /// <param name="methodInfo">Method Info for the register operation.</param>
+    /// <param name="typeId">Identifier of the type to target.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Register(ulong methodId, MethodInfoGen methodInfo, ulong typeId)
     {
@@ -32,6 +35,8 @@ public static class MethodRegistry
     /// <summary>
     /// Gets a method by its ID
     /// </summary>
+    /// <param name="methodId">Identifier of the method to target.</param>
+    /// <returns>The requested method Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MethodInfoGen GetMethod(ulong methodId)
     {
@@ -41,6 +46,9 @@ public static class MethodRegistry
     /// <summary>
     /// Gets a method by type ID and name using perfect hash switch
     /// </summary>
+    /// <param name="typeId">Identifier of the type to target.</param>
+    /// <param name="name">Name of the Method Registry value to target.</param>
+    /// <returns>The requested method Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MethodInfoGen? GetMethodByName(ulong typeId, string name)
     {
@@ -55,6 +63,8 @@ public static class MethodRegistry
     /// <summary>
     /// Gets all methods for a type
     /// </summary>
+    /// <param name="typeId">Identifier of the type to target.</param>
+    /// <returns>The requested read Only Span.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<MethodInfoGen> GetMethodsForType(ulong typeId)
     {

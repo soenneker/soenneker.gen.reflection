@@ -104,8 +104,8 @@ public readonly struct PropertyInfoGen
     /// <summary>
     /// Gets value.
     /// </summary>
-    /// <param name="obj">The obj.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="obj">Object whose member value is being read.</param>
+    /// <returns>The requested object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public object? GetValue(object? obj)
     {
@@ -117,8 +117,8 @@ public readonly struct PropertyInfoGen
     /// <summary>
     /// Sets value.
     /// </summary>
-    /// <param name="obj">The obj.</param>
-    /// <param name="value">The value.</param>
+    /// <param name="obj">Object whose member value is being read.</param>
+    /// <param name="value">Value to assign to the field or property.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetValue(object? obj, object? value)
     {

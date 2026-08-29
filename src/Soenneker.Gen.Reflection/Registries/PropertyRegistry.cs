@@ -16,6 +16,9 @@ public static class PropertyRegistry
     /// <summary>
     /// Registers a property with its ID
     /// </summary>
+    /// <param name="propertyId">Identifier of the property to target.</param>
+    /// <param name="propertyInfo">Property Info for the register operation.</param>
+    /// <param name="typeId">Identifier of the type to target.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Register(ulong propertyId, PropertyInfoGen propertyInfo, ulong typeId)
     {
@@ -32,6 +35,8 @@ public static class PropertyRegistry
     /// <summary>
     /// Gets a property by its ID
     /// </summary>
+    /// <param name="propertyId">Identifier of the property to target.</param>
+    /// <returns>The requested property Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static PropertyInfoGen GetProperty(ulong propertyId)
     {
@@ -41,6 +46,9 @@ public static class PropertyRegistry
     /// <summary>
     /// Gets a property by type ID and name using perfect hash switch
     /// </summary>
+    /// <param name="typeId">Identifier of the type to target.</param>
+    /// <param name="name">Name of the Property Registry value to target.</param>
+    /// <returns>The requested property Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static PropertyInfoGen? GetPropertyByName(ulong typeId, string name)
     {
@@ -55,6 +63,8 @@ public static class PropertyRegistry
     /// <summary>
     /// Gets all properties for a type
     /// </summary>
+    /// <param name="typeId">Identifier of the type to target.</param>
+    /// <returns>The requested read Only Span.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<PropertyInfoGen> GetPropertiesForType(ulong typeId)
     {

@@ -135,8 +135,8 @@ public readonly struct TypeInfoGen
     /// <summary>
     /// Gets property.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="name">Name of the Type Info Gen value to target.</param>
+    /// <returns>The requested property Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public PropertyInfoGen? GetProperty(string name)
     {
@@ -146,8 +146,8 @@ public readonly struct TypeInfoGen
     /// <summary>
     /// Gets field.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="name">Name of the Type Info Gen value to target.</param>
+    /// <returns>The requested field Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public FieldInfoGen? GetField(string name)
     {
@@ -157,12 +157,11 @@ public readonly struct TypeInfoGen
     /// <summary>
     /// Gets method.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="name">Name of the Type Info Gen value to target.</param>
+    /// <returns>The requested method Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public MethodInfoGen? GetMethod(string name)
     {
         return MethodRegistry.GetMethodByName(_id, name);
     }
 }
-

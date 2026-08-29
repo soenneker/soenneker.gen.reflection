@@ -16,6 +16,9 @@ public static class FieldRegistry
     /// <summary>
     /// Registers a field with its ID
     /// </summary>
+    /// <param name="fieldId">Identifier of the field to target.</param>
+    /// <param name="fieldInfo">Field Info for the register operation.</param>
+    /// <param name="typeId">Identifier of the type to target.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Register(ulong fieldId, FieldInfoGen fieldInfo, ulong typeId)
     {
@@ -32,6 +35,8 @@ public static class FieldRegistry
     /// <summary>
     /// Gets a field by its ID
     /// </summary>
+    /// <param name="fieldId">Identifier of the field to target.</param>
+    /// <returns>The requested field Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FieldInfoGen GetField(ulong fieldId)
     {
@@ -41,6 +46,9 @@ public static class FieldRegistry
     /// <summary>
     /// Gets a field by type ID and name using perfect hash switch
     /// </summary>
+    /// <param name="typeId">Identifier of the type to target.</param>
+    /// <param name="name">Name of the Field Registry value to target.</param>
+    /// <returns>The requested field Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FieldInfoGen? GetFieldByName(ulong typeId, string name)
     {
@@ -55,6 +63,8 @@ public static class FieldRegistry
     /// <summary>
     /// Gets all fields for a type
     /// </summary>
+    /// <param name="typeId">Identifier of the type to target.</param>
+    /// <returns>The requested read Only Span.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<FieldInfoGen> GetFieldsForType(ulong typeId)
     {

@@ -16,6 +16,9 @@ public static class TypeRegistry
     /// <summary>
     /// Registers a type with its ID
     /// </summary>
+    /// <param name="id">Identifier of the Type Registry instance or registration to target.</param>
+    /// <param name="typeInfo">Type Info for the register operation.</param>
+    /// <param name="name">Name of the Type Registry value to target.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Register(ulong id, TypeInfoGen typeInfo, string name)
     {
@@ -26,6 +29,8 @@ public static class TypeRegistry
     /// <summary>
     /// Gets a type by its ID
     /// </summary>
+    /// <param name="id">Identifier of the type registry instance or registration to target.</param>
+    /// <returns>The requested type Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TypeInfoGen GetType(ulong id)
     {
@@ -35,6 +40,8 @@ public static class TypeRegistry
     /// <summary>
     /// Gets a type by its name
     /// </summary>
+    /// <param name="name">Name of the Type Registry value to target.</param>
+    /// <returns>The requested type Info Gen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TypeInfoGen? GetTypeByName(string name)
     {
@@ -48,6 +55,7 @@ public static class TypeRegistry
     /// <summary>
     /// Gets all registered types
     /// </summary>
+    /// <returns>The requested read Only Span.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<TypeInfoGen> GetAllTypes()
     {
