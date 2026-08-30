@@ -159,6 +159,12 @@ public class GetTypeGenUnitTests
         toStringMethod.Value.ReturnType.Name.Should().Be("String");
         toStringMethod.Value.IsStatic.Should().BeFalse();
         toStringMethod.Value.ParameterTypes.Length.Should().Be(0);
+
+        MethodInfoGen? updateMethod = personTypeInfoGen.GetMethod("Update");
+        updateMethod.HasValue.Should().BeTrue();
+        updateMethod.Value.ParameterTypes.Length.Should().Be(2);
+        updateMethod.Value.ParameterTypes[0].Name.Should().Be("String");
+        updateMethod.Value.ParameterTypes[1].Name.Should().Be("Int32");
     }
 
     [Test]
@@ -209,6 +215,23 @@ public class GetTypeGenUnitTests
         ageProperty.HasValue.Should().BeTrue();
         object? ageValue = ageProperty.Value.GetValue(person);
         ageValue.Should().Be(28);
+    }
+
+    [Test]
+    public void GetTypeGen_DoesNotExposeNonPublicOrInitOnlySetters()
+    {
+        var person = new TestPerson { Name = "Ada", Code = "A1" };
+        TypeInfoGen typeInfo = person.GetTypeGen();
+
+        PropertyInfoGen secret = typeInfo.GetProperty("Secret").Value;
+        secret.CanRead.Should().BeFalse();
+        secret.CanWrite.Should().BeFalse();
+        secret.GetValue(person).Should().BeNull();
+
+        PropertyInfoGen code = typeInfo.GetProperty("Code").Value;
+        code.CanRead.Should().BeTrue();
+        code.CanWrite.Should().BeFalse();
+        code.GetValue(person).Should().Be("A1");
     }
 
     [Test]
@@ -289,11 +312,19 @@ public class TestPerson
     public string Name { get; set; } = string.Empty;
     public int Age { get; set; }
     public TestCompany? Company { get; set; }
+    public string Code { get; init; } = string.Empty;
+    private string Secret { get; set; } = "secret";
     private readonly string _id = Guid.NewGuid().ToString();
 
     public override string ToString()
     {
         return $"{Name} ({Age})";
+    }
+
+    public void Update(string name, int age)
+    {
+        Name = name;
+        Age = age;
     }
 }
 

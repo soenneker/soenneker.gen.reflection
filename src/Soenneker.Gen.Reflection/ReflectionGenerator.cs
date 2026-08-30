@@ -20,7 +20,7 @@ public sealed class ReflectionGenerator : IIncrementalGenerator
     /// <summary>
     /// Initializes the reflection generator so it is ready for use.
     /// </summary>
-    /// <param name="context">HTTP context containing the Authorization header.</param>
+    /// <param name="context">Roslyn initialization context used to register generator pipelines.</param>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Find all invocations - we'll filter for GetTypeGen calls in the Emitter
@@ -50,12 +50,6 @@ public sealed class ReflectionGenerator : IIncrementalGenerator
 
             try
             {
-                // Add diagnostic to see if generator is running
-                spc.ReportDiagnostic(Diagnostic.Create(
-                    new DiagnosticDescriptor("SGR002", "ReflectionGenerator running", 
-                        $"Found {invocations.Length} invocations and {razorCalls.Length} razor calls", 
-                        "GetTypeGen", DiagnosticSeverity.Info, true), Location.None));
-                
                 GenerateTypeGenCode(spc, compilation, invocations, razorCalls);
             }
             catch (Exception ex)
@@ -159,16 +153,7 @@ public sealed class ReflectionGenerator : IIncrementalGenerator
             //     }
             // }
 
-            spc.ReportDiagnostic(Diagnostic.Create(
-                new DiagnosticDescriptor("SGR006", "After Razor Processing", 
-                    $"After processing Razor calls, have {generatedTypes.Count} types", 
-                    "GetTypeGen", DiagnosticSeverity.Info, true), Location.None));
-
             // Generate extension methods for all collected types
-            spc.ReportDiagnostic(Diagnostic.Create(
-                new DiagnosticDescriptor("SGR004", "Extension Methods Generation", 
-                    $"About to generate extension methods for {generatedTypes.Count} types", 
-                    "GetTypeGen", DiagnosticSeverity.Info, true), Location.None));
             try
             {
                 ExtensionsEmitter.EmitExtensionsFile(spc, generatedTypes);

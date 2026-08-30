@@ -3,143 +3,75 @@
 [![](https://img.shields.io/nuget/dt/soenneker.gen.reflection.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.gen.reflection/)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.gen.reflection/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.gen.reflection/actions/workflows/codeql.yml)
 
-# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Gen.Reflection
-### Compile-time reflection for .NET
+# Soenneker.Gen.Reflection
 
-## Installation
+A C# source generator that creates lightweight type and member metadata for types used with `GetTypeGen()`.
 
-```
+## Install
+
+Add the package directly to each project containing `GetTypeGen` calls:
+
+```bash
 dotnet add package Soenneker.Gen.Reflection
 ```
 
-## Features
+Source generators do not flow transitively through ordinary project references.
 
-### GetTypeGen Extension Method
-
-The `GetTypeGen()` extension method provides compile-time generated type information without runtime reflection overhead. This source generator analyzes your code and generates highly optimized non-reflection based code for type introspection.
-
-#### Basic Usage
+## Usage
 
 ```csharp
 using Soenneker.Gen.Reflection;
 
-// Get type information from an instance
-string text = "Hello World";
-var typeInfo = text.GetTypeGen();
+var person = new Person { Name = "Ada", Age = 37 };
+TypeInfoGen type = person.GetTypeGen();
 
-Console.WriteLine($"Type: {typeInfo.Name}");           // "String"
-Console.WriteLine($"Is Value Type: {typeInfo.IsValueType}"); // false
-Console.WriteLine($"Is Reference Type: {typeInfo.IsReferenceType}"); // true
+Console.WriteLine(type.Name);             // Person
+Console.WriteLine(type.IsReferenceType);  // True
+
+PropertyInfoGen? name = type.GetProperty("Name");
+if (name.HasValue && name.Value.CanRead)
+{
+    Console.WriteLine(name.Value.GetValue(person));
+}
 ```
 
-#### Generic Method Usage
+The generator discovers the compile-time receiver type and emits a more-specific extension overload that returns precomputed metadata. The receiver is not inspected at runtime, so a null reference can still be used to obtain its compile-time type metadata; member getters still require a valid compatible instance.
+
+## Available metadata
+
+`TypeInfoGen` exposes:
+
+- `Name`, `FullName`, and `AssemblyQualifiedName`
+- value/reference, generic, and nullable flags
+- nullable underlying-type and generic-argument summaries
+- declared `Fields`, `Properties`, and ordinary `Methods`
+- exact-name `GetField`, `GetProperty`, and `GetMethod` lookups
+
+Public fields and properties receive generated getter delegates. Writable public fields and ordinary public setters also receive setter delegates. Non-public members remain metadata-only, and `init`-only properties are readable but are not exposed as writable.
 
 ```csharp
-// Get type information using generic method
-var listTypeInfo = GetTypeGen<List<string>>();
-Console.WriteLine($"Type: {listTypeInfo.Name}"); // "List`1"
-Console.WriteLine($"Is Generic: {listTypeInfo.IsGenericType}"); // true
-Console.WriteLine($"Generic Args: {listTypeInfo.GenericTypeArguments.Length}"); // 1
+PropertyInfoGen age = type.GetProperty("Age").Value;
+age.SetValue(person, 38);
+
+FieldInfoGen? field = type.GetField("PublicField");
+object? value = field?.GetValue(person);
 ```
 
-#### Property and Field Access
+Method metadata includes the name, return type, static flag, and parameter types. It does not invoke methods. When methods are overloaded, `GetMethod(name)` returns the first declared match; inspect `Methods` when the signature matters.
 
-```csharp
-public class Person
-{
-    public string Name { get; set; }
-    public int Age { get; set; }
-    private readonly string _id = Guid.NewGuid().ToString();
-}
+## Scope and limitations
 
-var person = new Person { Name = "John", Age = 30 };
-var personTypeInfo = person.GetTypeGen();
+- Metadata is generated only for types the generator can resolve from C# `GetTypeGen()` calls, plus a small set of built-in primitive types used by the generated support code.
+- Member lookup is case-sensitive and covers members declared directly on the type. It is not a replacement for every `System.Reflection` binding or inheritance option.
+- Property and field accessors box values through `object`; use direct access in performance-critical paths.
+- Generated accessors enforce normal C# accessibility and type casts. Passing an object or assigned value of the wrong type throws the usual cast exception.
+- The API does not create objects, inspect attributes, invoke methods, or access non-public values.
 
-// Access properties
-var nameProperty = personTypeInfo.GetProperty("Name");
-if (nameProperty.HasValue)
-{
-    Console.WriteLine($"Property: {nameProperty.Value.Name}");
-    Console.WriteLine($"Type: {nameProperty.Value.PropertyType.Name}");
-    Console.WriteLine($"Value: {nameProperty.Value.GetValue(person)}");
-}
+## Inspect generated files
 
-// Access fields
-var fields = personTypeInfo.Fields;
-foreach (var field in fields)
-{
-    Console.WriteLine($"Field: {field.Name} ({field.FieldType.Name})");
-}
+```xml
+<PropertyGroup>
+  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+</PropertyGroup>
 ```
-
-#### Method Information
-
-```csharp
-var personTypeInfo = person.GetTypeGen();
-var toStringMethod = personTypeInfo.GetMethod("ToString");
-
-if (toStringMethod.HasValue)
-{
-    Console.WriteLine($"Method: {toStringMethod.Value.Name}");
-    Console.WriteLine($"Return Type: {toStringMethod.Value.ReturnType.Name}");
-    Console.WriteLine($"Parameters: {toStringMethod.Value.ParameterTypes.Length}");
-    
-    // Invoke the method
-    var result = toStringMethod.Value.Invoke(person, null);
-    Console.WriteLine($"Result: {result}");
-}
-```
-
-#### Nullable Types
-
-```csharp
-int? nullableInt = 42;
-var nullableTypeInfo = nullableInt.GetTypeGen();
-
-Console.WriteLine($"Type: {nullableTypeInfo.Name}"); // "Nullable`1"
-Console.WriteLine($"Is Nullable: {nullableTypeInfo.IsNullable}"); // true
-
-if (nullableTypeInfo.UnderlyingType.HasValue)
-{
-    Console.WriteLine($"Underlying: {nullableTypeInfo.UnderlyingType.Value.Name}"); // "Int32"
-}
-```
-
-#### Razor/Blazor Support
-
-The source generator also works in Razor components:
-
-```razor
-@{
-    string text = "Hello Blazor";
-    var typeInfo = text.GetTypeGen();
-}
-
-<p>Type: @typeInfo.Name</p>
-<p>Is Reference Type: @typeInfo.IsReferenceType</p>
-```
-
-## Generated Code
-
-The source generator creates optimized code at compile time. For example, when you call `text.GetTypeGen()`, the generator creates:
-
-```csharp
-// Generated code (simplified)
-public static partial class StringTypeInfo
-{
-    public static string Name => "String";
-    public static string FullName => "System.String";
-    public static bool IsValueType => false;
-    public static bool IsReferenceType => true;
-    public static bool IsGenericType => false;
-    public static bool IsNullable => false;
-    // ... more properties
-}
-```
-
-## Performance Benefits
-
-- **Zero Runtime Reflection**: All type information is generated at compile time
-- **Optimized Code**: Direct property access instead of reflection calls
-- **Type Safety**: Compile-time type checking and IntelliSense support
-- **Minimal Memory Overhead**: No reflection metadata loaded at runtime
