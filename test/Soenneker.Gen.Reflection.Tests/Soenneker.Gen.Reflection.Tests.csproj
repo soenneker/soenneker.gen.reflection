@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Tests.Attributes.Local" Version="4.0.87" />
+        <PackageReference Include="Soenneker.Tests.Attributes.Local" Version="4.0.88" />
         <PackageReference Include="Soenneker.Tests.Benchmark" Version="4.0.147" />
         <PackageReference Include="Soenneker.Documents.Audit" Version="4.0.2570" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.721" />
