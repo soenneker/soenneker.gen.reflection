@@ -17,6 +17,12 @@ namespace Soenneker.Gen.Reflection;
 [Generator]
 public sealed class ReflectionGenerator : IIncrementalGenerator
 {
+    private static readonly Regex _lineCommentRegex = new(@"//.*$", RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+    private static readonly Regex _getTypeGenRegex = new(
+        @"((?:new\s+[a-zA-Z_][\w<>,\s]*?\([^)]*\))|(?:[a-zA-Z_][\w\.]*(?:\([^)]*\))?))\s*\.\s*GetTypeGen\s*(?:<([^>]+)>)?",
+        RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
     /// <summary>
     /// Initializes the reflection generator so it is ready for use.
     /// </summary>
@@ -258,13 +264,10 @@ public sealed class ReflectionGenerator : IIncrementalGenerator
         var seen = new HashSet<string>();
 
         // Find all .GetTypeGen<>() calls in Razor files
-        string contentWithoutComments = Regex.Replace(content, @"//.*$", "", RegexOptions.Multiline);
+        string contentWithoutComments = _lineCommentRegex.Replace(content, "");
 
-        // Pattern to match GetTypeGen calls: expression.GetTypeGen<Type>() or expression.GetTypeGen()
-        var getTypeGenRegex = new Regex(@"((?:new\s+[a-zA-Z_][\w<>,\s]*?\([^)]*\))|(?:[a-zA-Z_][\w\.]*(?:\([^)]*\))?))\s*\.\s*GetTypeGen\s*(?:<([^>]+)>)?", 
-            RegexOptions.Singleline);
-        
-        MatchCollection matches = getTypeGenRegex.Matches(contentWithoutComments);
+        // Pattern matches expression.GetTypeGen<Type>() or expression.GetTypeGen().
+        MatchCollection matches = _getTypeGenRegex.Matches(contentWithoutComments);
 
         foreach (Match match in matches)
         {
