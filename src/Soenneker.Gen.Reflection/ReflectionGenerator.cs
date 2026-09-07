@@ -31,7 +31,12 @@ public sealed class ReflectionGenerator : IIncrementalGenerator
     {
         // Find all invocations - we'll filter for GetTypeGen calls in the Emitter
         IncrementalValuesProvider<(InvocationExpressionSyntax, SemanticModel)> typeGenInvocations = context.SyntaxProvider.CreateSyntaxProvider(
-            static (node, _) => node is InvocationExpressionSyntax, static (ctx, _) => ((InvocationExpressionSyntax)ctx.Node, ctx.SemanticModel));
+            static (node, _) => node is InvocationExpressionSyntax invocation && invocation.Expression switch
+            {
+                MemberAccessExpressionSyntax member => member.Name.Identifier.ValueText == "GetTypeGen",
+                IdentifierNameSyntax identifier => identifier.Identifier.ValueText == "GetTypeGen",
+                _ => false
+            }, static (ctx, _) => ((InvocationExpressionSyntax)ctx.Node, ctx.SemanticModel));
 
         // Also scan .razor files for GetTypeGen calls
         IncrementalValuesProvider<(string path, string content)> razorFiles = context.AdditionalTextsProvider.Where(static file => file.Path.EndsWith(".razor"))
@@ -260,6 +265,9 @@ public sealed class ReflectionGenerator : IIncrementalGenerator
 
     private static ImmutableArray<string> ExtractGetTypeGenCallsFromRazor(string content)
     {
+        if (content.IndexOf("GetTypeGen", StringComparison.Ordinal) < 0)
+            return ImmutableArray<string>.Empty;
+
         ImmutableArray<string>.Builder results = ImmutableArray.CreateBuilder<string>();
         var seen = new HashSet<string>();
 
@@ -315,13 +323,6 @@ public sealed class ReflectionGenerator : IIncrementalGenerator
         if (string.IsNullOrEmpty(word))
             return false;
             
-        var keywords = new[] { "var", "int", "string", "bool", "double", "float", "long", "short", "byte", "char", "object", "dynamic", "void" };
-        for (var i = 0; i < keywords.Length; i++)
-        {
-            if (keywords[i] == word)
-                return true;
-        }
-
-        return false;
+        return word is "var" or "int" or "string" or "bool" or "double" or "float" or "long" or "short" or "byte" or "char" or "object" or "dynamic" or "void";
     }
 }

@@ -95,9 +95,24 @@ internal static class TypeDefinitionsEmitter
         sb.AppendLine("        public TypeInfoGen[] GenericTypeArguments => _genericTypeArgumentNames?.Select(name => new TypeInfoGen(name, name, name, false, true, false, false, Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), null, null)).ToArray() ?? Array.Empty<TypeInfoGen>();");
         sb.AppendLine();
         sb.AppendLine("        // Helper methods");
-        sb.AppendLine("        public PropertyInfoGen? GetProperty(string name) => Array.Find(_properties, p => p.Name == name);");
-        sb.AppendLine("        public FieldInfoGen? GetField(string name) => Array.Find(_fields, f => f.Name == name);");
-        sb.AppendLine("        public MethodInfoGen? GetMethod(string name) => Array.Find(_methods, m => m.Name == name);");
+        sb.AppendLine("        public PropertyInfoGen? GetProperty(string name)");
+        sb.AppendLine("        {");
+        sb.AppendLine("            if (_properties == null) throw new ArgumentNullException(\"array\");");
+        sb.AppendLine("            foreach (var item in _properties) if (item.Name == name) return item;");
+        sb.AppendLine("            return default(PropertyInfoGen);");
+        sb.AppendLine("        }");
+        sb.AppendLine("        public FieldInfoGen? GetField(string name)");
+        sb.AppendLine("        {");
+        sb.AppendLine("            if (_fields == null) throw new ArgumentNullException(\"array\");");
+        sb.AppendLine("            foreach (var item in _fields) if (item.Name == name) return item;");
+        sb.AppendLine("            return default(FieldInfoGen);");
+        sb.AppendLine("        }");
+        sb.AppendLine("        public MethodInfoGen? GetMethod(string name)");
+        sb.AppendLine("        {");
+        sb.AppendLine("            if (_methods == null) throw new ArgumentNullException(\"array\");");
+        sb.AppendLine("            foreach (var item in _methods) if (item.Name == name) return item;");
+        sb.AppendLine("            return default(MethodInfoGen);");
+        sb.AppendLine("        }");
         sb.AppendLine("    }");
         sb.AppendLine();
     }

@@ -148,8 +148,10 @@ internal static class Emitter
     {
         if (typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType)
         {
-            ITypeSymbol[] typeArguments = namedType.TypeArguments.ToArray();
-            string[] names = Array.ConvertAll(typeArguments, arg => $"\"{GetTypeName(arg)}\"");
+            var typeArguments = namedType.TypeArguments;
+            var names = new string[typeArguments.Length];
+            for (var i = 0; i < typeArguments.Length; i++)
+                names[i] = $"\"{GetTypeName(typeArguments[i])}\"";
             return $"new string[] {{ {string.Join(", ", names)} }}";
         }
         return "null";
@@ -175,8 +177,10 @@ internal static class Emitter
     {
         if (typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType)
         {
-            ITypeSymbol[] typeArguments = namedType.TypeArguments.ToArray();
-            string[] ids = Array.ConvertAll(typeArguments, arg => $"{(ulong)arg.GetHashCode()}UL");
+            var typeArguments = namedType.TypeArguments;
+            var ids = new string[typeArguments.Length];
+            for (var i = 0; i < typeArguments.Length; i++)
+                ids[i] = $"{(ulong)typeArguments[i].GetHashCode()}UL";
             return $"new ulong[] {{ {string.Join(", ", ids)} }}";
         }
         return "null";

@@ -17,7 +17,7 @@ public static partial class TypeGenExtensions
     /// <returns>Generated type information</returns>
     public static TypeInfoGen GetTypeGen<T>(this T obj)
     {
-        return BuildFromType(typeof(T));
+        return Cache<T>.Value;
     }
 
     /// <summary>
@@ -28,7 +28,12 @@ public static partial class TypeGenExtensions
     /// <returns>Generated type information</returns>
     public static TypeInfoGen GetTypeGen<T>()
     {
-        return BuildFromType(typeof(T));
+        return Cache<T>.Value;
+    }
+
+    private static class Cache<T>
+    {
+        internal static readonly TypeInfoGen Value = BuildFromType(typeof(T));
     }
 
     private static TypeInfoGen BuildFromType(Type type)
@@ -49,8 +54,6 @@ public static partial class TypeGenExtensions
         }
 
         bool isNullable = Nullable.GetUnderlyingType(type) != null;
-        string? underlying = isNullable ? Nullable.GetUnderlyingType(type)?.Name : null;
-        string[]? genericArgs = type.IsGenericType ? Array.ConvertAll(type.GetGenericArguments(), t => t.Name) : null;
 
         return new TypeInfoGen(
             0UL,
