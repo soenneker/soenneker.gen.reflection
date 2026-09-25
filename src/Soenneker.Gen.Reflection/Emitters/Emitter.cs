@@ -100,8 +100,8 @@ internal static class Emitter
 
         if (typeSymbol is INamedTypeSymbol named)
         {
-            string ns = string.IsNullOrEmpty(named.ContainingNamespace?.ToDisplayString())
-                ? ""
+            string ns = named.ContainingNamespace is null || named.ContainingNamespace.IsGlobalNamespace
+                ? "global::"
                 : "global::" + named.ContainingNamespace.ToDisplayString() + ".";
             string name = named.Name;
             if (named.IsGenericType)
