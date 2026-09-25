@@ -1,6 +1,8 @@
 using Microsoft.CodeAnalysis;
 using System;
 using System.Linq;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp;
 using System.Text;
 
 namespace Soenneker.Gen.Reflection.Emitters;
@@ -143,7 +145,8 @@ internal static class TypeInfoEmitter
         sb.AppendLine($"    /// <summary>");
         sb.AppendLine($"    /// Gets all fields of the type");
         sb.AppendLine($"    /// </summary>");
-        sb.AppendLine($"    public static FieldInfoGen[] Fields => new FieldInfoGen[]");
+        sb.AppendLine($"    public static FieldInfoGen[] Fields => _fields;");
+        sb.AppendLine($"    private static readonly FieldInfoGen[] _fields = new FieldInfoGen[]");
         sb.AppendLine($"    {{");
         
         foreach (IFieldSymbol field in allInstanceFields)
@@ -151,7 +154,7 @@ internal static class TypeInfoEmitter
             string fieldType = Emitter.GetTypeName(field.Type);
             if (field.DeclaredAccessibility == Accessibility.Public)
             {
-                string declaringType = Emitter.FormatFullyQualified(typeSymbol);
+                string declaringType = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                 string castType = Emitter.FormatFullyQualified(field.Type);
                 var getter = $"new Func<object, object>(obj => (({declaringType})obj).{field.Name})";
                 string setter = field.IsReadOnly ? "null" : $"new Action<object, object>((obj, value) => (({declaringType})obj).{field.Name} = ({castType})value)";
@@ -166,6 +169,7 @@ internal static class TypeInfoEmitter
         
         sb.AppendLine($"    }};");
         sb.AppendLine();
+        EmitNameLookup(sb, "Field", allInstanceFields.Select(member => member.Name).ToArray());
     }
 
     private static void EmitPropertyInformation(StringBuilder sb, ITypeSymbol typeSymbol)
@@ -177,24 +181,28 @@ internal static class TypeInfoEmitter
         sb.AppendLine($"    /// <summary>");
         sb.AppendLine($"    /// Gets all properties of the type");
         sb.AppendLine($"    /// </summary>");
-        sb.AppendLine($"    public static PropertyInfoGen[] Properties => new PropertyInfoGen[]");
+        sb.AppendLine($"    public static PropertyInfoGen[] Properties => _properties;");
+        sb.AppendLine($"    private static readonly PropertyInfoGen[] _properties = new PropertyInfoGen[]");
         sb.AppendLine($"    {{");
         
         foreach (IPropertySymbol property in properties)
         {
-            string declaringType = Emitter.FormatFullyQualified(typeSymbol);
+            string declaringType = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             string propTypeName = Emitter.GetTypeName(property.Type);
-            string castType = Emitter.FormatFullyQualified(property.Type);
+            string castType = property.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             bool canRead = property.GetMethod?.DeclaredAccessibility == Accessibility.Public;
             bool canWrite = property.SetMethod?.DeclaredAccessibility == Accessibility.Public && !property.SetMethod.IsInitOnly;
             string getter = canRead ? $"new Func<object, object>(obj => (({declaringType})obj).{property.Name})" : "null";
             string setter = canWrite ? $"new Action<object, object>((obj, value) => (({declaringType})obj).{property.Name} = ({castType})value)" : "null";
+            string typedGetter = canRead ? $"new Func<{declaringType}, {castType}>(static obj => obj.@{property.Name})" : "null";
+            string typedSetter = canWrite && typeSymbol.IsReferenceType ? $"new Action<{declaringType}, {castType}>(static (obj, value) => obj.@{property.Name} = value)" : "null";
             // Provide a richer TypeInfoGen for property type to allow IsGenericType checks
-            sb.AppendLine($"        new PropertyInfoGen(\"{property.Name}\", new TypeInfoGen(\"{propTypeName}\", \"{property.Type.ToDisplayString()}\", \"{property.Type.ToDisplayString()}, {property.ContainingType.ContainingAssembly.Name}\", {property.Type.IsValueType.ToString().ToLower()}, {property.Type.IsReferenceType.ToString().ToLower()}, {(property.Type is INamedTypeSymbol pNamed && pNamed.IsGenericType).ToString().ToLower()}, {Emitter.IsNullableType(property.Type).ToString().ToLower()}, Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), {Emitter.GetUnderlyingTypeName(property.Type)}, {Emitter.GetGenericTypeArgumentNames(property.Type)}), {canRead.ToString().ToLower()}, {canWrite.ToString().ToLower()}, {getter}, {setter}),");
+            sb.AppendLine($"        new PropertyInfoGen(\"{property.Name}\", new TypeInfoGen(\"{propTypeName}\", \"{property.Type.ToDisplayString()}\", \"{property.Type.ToDisplayString()}, {property.ContainingType.ContainingAssembly.Name}\", {property.Type.IsValueType.ToString().ToLower()}, {property.Type.IsReferenceType.ToString().ToLower()}, {(property.Type is INamedTypeSymbol pNamed && pNamed.IsGenericType).ToString().ToLower()}, {Emitter.IsNullableType(property.Type).ToString().ToLower()}, Array.Empty<FieldInfoGen>(), Array.Empty<PropertyInfoGen>(), Array.Empty<MethodInfoGen>(), {Emitter.GetUnderlyingTypeName(property.Type)}, {Emitter.GetGenericTypeArgumentNames(property.Type)}), {canRead.ToString().ToLower()}, {canWrite.ToString().ToLower()}, {getter}, {setter}, {typedGetter}, {typedSetter}),");
         }
         
         sb.AppendLine($"    }};");
         sb.AppendLine();
+        EmitNameLookup(sb, "Property", properties.Select(member => member.Name).ToArray());
     }
 
     private static void EmitMethodInformation(StringBuilder sb, ITypeSymbol typeSymbol)
@@ -204,7 +212,8 @@ internal static class TypeInfoEmitter
         sb.AppendLine($"    /// <summary>");
         sb.AppendLine($"    /// Gets all methods of the type");
         sb.AppendLine($"    /// </summary>");
-        sb.AppendLine($"    public static MethodInfoGen[] Methods => new MethodInfoGen[]");
+        sb.AppendLine($"    public static MethodInfoGen[] Methods => _methods;");
+        sb.AppendLine($"    private static readonly MethodInfoGen[] _methods = new MethodInfoGen[]");
         sb.AppendLine($"    {{");
         
         foreach (IMethodSymbol method in methods)
@@ -217,5 +226,24 @@ internal static class TypeInfoEmitter
         
         sb.AppendLine($"    }};");
         sb.AppendLine();
+        EmitNameLookup(sb, "Method", methods.Select(member => member.Name).ToArray());
+    }
+
+    private static void EmitNameLookup(StringBuilder sb, string kind, string[] names)
+    {
+        sb.AppendLine($"    internal static int Get{kind}Index(string name)");
+        sb.AppendLine("    {");
+        sb.AppendLine("        switch (name)");
+        sb.AppendLine("        {");
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        for (int i = 0; i < names.Length; i++)
+        {
+            // Preserve the first declared match for overloaded methods.
+            if (seen.Add(names[i]))
+                sb.AppendLine($"            case {SymbolDisplay.FormatLiteral(names[i], true)}: return {i};");
+        }
+        sb.AppendLine("            default: return -1;");
+        sb.AppendLine("        }");
+        sb.AppendLine("    }");
     }
 }

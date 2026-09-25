@@ -57,7 +57,7 @@ internal static class ExtensionsEmitter
                 }
                 else
                 {
-                    sb.AppendLine($"            {className}TypeInfoGen.Fields, {className}TypeInfoGen.Properties, {className}TypeInfoGen.Methods, {Emitter.GetUnderlyingTypeName(typeSymbol)}, {Emitter.GetGenericTypeArgumentNames(typeSymbol)});");
+                    sb.AppendLine($"            {className}TypeInfoGen.Fields, {className}TypeInfoGen.Properties, {className}TypeInfoGen.Methods, {Emitter.GetUnderlyingTypeName(typeSymbol)}, {Emitter.GetGenericTypeArgumentNames(typeSymbol)}, {className}TypeInfoGen.GetFieldIndex, {className}TypeInfoGen.GetPropertyIndex, {className}TypeInfoGen.GetMethodIndex);");
                 }
                 sb.AppendLine();
             }
