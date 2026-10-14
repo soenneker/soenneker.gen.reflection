@@ -1,0 +1,7 @@
+<Project>
+    <Target Name="ValidateSoennekerGenReflectionTargetFramework" BeforeTargets="PrepareForBuild;CoreCompile"
+            Condition="'$(TargetFramework)' != '' and '$(IsCrossTargetingBuild)' != 'true'">
+        <Error Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp' or !$([MSBuild]::VersionGreaterThanOrEquals('$(TargetFrameworkVersion)', '10.0'))"
+               Text="Soenneker.Gen.Reflection requires a consumer targeting .NET 10 or later. Current target: $(TargetFramework)." />
+    </Target>
+</Project>
