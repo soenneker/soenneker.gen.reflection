@@ -21,7 +21,7 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Tests.Attributes.Local" Version="11.0.163" />
-        <PackageReference Include="Soenneker.Tests.Benchmark" Version="11.0.227" />
+        <PackageReference Include="Soenneker.Tests.Benchmark" Version="11.0.228" />
         <PackageReference Include="Soenneker.Utils.Test" Version="11.0.345" />
         <PackageReference Include="Soenneker.Tests.Unit" Version="11.0.1422" />
         <PackageReference Include="TUnit" Version="1.81.0" />
